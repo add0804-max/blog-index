@@ -1,0 +1,1631 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>教育情報ブログ｜記事まとめ</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--primary:#1a3a5c;--accent:#e85d26;--accent2:#2e86c1;--bg:#f4f7fa;--card:#fff;--text:#1e2b38;--muted:#6b7c93;--border:#dde3eb;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+header{background:var(--primary);color:#fff;padding:22px 32px 18px;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2);}
+header h1{font-family:'Noto Serif JP',serif;font-size:1.4rem;font-weight:700;}
+header p{font-size:.82rem;opacity:.75;margin-top:3px;}
+.header-meta{display:flex;align-items:center;gap:14px;margin-top:10px;flex-wrap:wrap;}
+.badge{background:var(--accent);color:#fff;font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:20px;}
+
+.controls{background:#fff;border-bottom:1px solid var(--border);padding:11px 32px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+.search-wrap{position:relative;flex:1;min-width:180px;}
+.search-wrap input{width:100%;padding:8px 12px 8px 34px;border:1.5px solid var(--border);border-radius:8px;font-size:.88rem;font-family:inherit;outline:none;transition:border-color .2s;}
+.search-wrap input:focus{border-color:var(--accent2);}
+.s-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted);}
+.filter-btns{display:flex;gap:5px;flex-wrap:wrap;}
+.filter-btn{padding:5px 11px;border-radius:20px;border:1.5px solid var(--border);background:#fff;font-size:.76rem;font-family:inherit;cursor:pointer;transition:all .15s;white-space:nowrap;color:var(--text);}
+.filter-btn:hover{border-color:var(--accent2);color:var(--accent2);}
+.filter-btn.active{background:var(--primary);border-color:var(--primary);color:#fff;}
+
+/* アイキャッチトグル */
+.img-toggle{display:flex;align-items:center;gap:7px;font-size:.81rem;color:var(--muted);cursor:pointer;user-select:none;background:var(--bg);border:1.5px solid var(--border);border-radius:20px;padding:5px 12px;transition:all .15s;flex-shrink:0;}
+.img-toggle:hover{border-color:var(--accent2);color:var(--accent2);}
+.img-toggle.on{background:var(--accent2);border-color:var(--accent2);color:#fff;}
+.tdot{width:30px;height:15px;background:#ccc;border-radius:8px;position:relative;transition:background .2s;flex-shrink:0;}
+.tdot::after{content:'';position:absolute;top:2px;left:2px;width:11px;height:11px;background:#fff;border-radius:50%;transition:left .2s;}
+.img-toggle.on .tdot{background:rgba(255,255,255,.35);}
+.img-toggle.on .tdot::after{left:17px;}
+.result-count{font-size:.82rem;color:var(--muted);white-space:nowrap;margin-left:auto;}
+
+/* プログレスバー */
+.progress-bar{height:3px;background:linear-gradient(90deg,var(--accent2),var(--accent));width:0%;transition:width .4s;display:none;}
+.progress-bar.active{display:block;}
+.progress-msg{font-size:.75rem;color:var(--muted);padding:4px 32px;display:none;background:#fff;border-bottom:1px solid var(--border);}
+.progress-msg.active{display:block;}
+
+.main{padding:22px 32px 48px;max-width:1440px;margin:0 auto;}
+.category-section{margin-bottom:32px;}
+.category-header{display:flex;align-items:center;gap:9px;margin-bottom:12px;padding-bottom:7px;border-bottom:2px solid var(--border);}
+.cat-dot{width:11px;height:11px;border-radius:3px;flex-shrink:0;}
+.category-title{font-family:'Noto Serif JP',serif;font-size:1rem;font-weight:700;color:var(--primary);}
+.cat-count{font-size:.77rem;color:var(--muted);background:var(--bg);padding:2px 7px;border-radius:10px;border:1px solid var(--border);}
+
+/* カードグリッド */
+.articles{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:11px;}
+body.img-mode .articles{grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;}
+
+/* カード */
+.article-card{background:var(--card);border:1.5px solid var(--border);border-radius:10px;overflow:hidden;text-decoration:none;color:inherit;display:flex;flex-direction:column;transition:box-shadow .18s,transform .18s;border-left:4px solid transparent;}
+.article-card:hover{box-shadow:0 6px 20px rgba(0,0,0,.1);transform:translateY(-2px);}
+
+/* アイキャッチ画像エリア（通常は高さ0で非表示） */
+.card-img-wrap{width:100%;height:0;overflow:hidden;position:relative;background:linear-gradient(135deg,#e8edf3,#cdd5e0);transition:height .3s ease;flex-shrink:0;}
+body.img-mode .card-img-wrap{height:160px;}
+.card-img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s,opacity .3s;opacity:0;}
+.card-img.loaded{opacity:1;}
+.article-card:hover .card-img{transform:scale(1.03);}
+.card-img-placeholder{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:2.2rem;color:var(--muted);opacity:.35;pointer-events:none;}
+.card-img.loaded ~ .card-img-placeholder{opacity:0;}
+
+/* カードボディ */
+.card-body{display:flex;align-items:flex-start;gap:9px;padding:12px 13px 13px;}
+.card-num{font-size:.7rem;color:#fff;background:var(--muted);border-radius:4px;padding:2px 5px;min-width:26px;text-align:center;flex-shrink:0;margin-top:2px;}
+.article-info{flex:1;min-width:0;}
+.article-title{font-size:.88rem;font-weight:500;line-height:1.5;color:var(--text);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;transition:color .15s;}
+.article-card:hover .article-title{color:var(--accent2);}
+
+/* 概要（アイキャッチOFF時のみ表示） */
+.article-desc{font-size:.78rem;color:var(--muted);line-height:1.55;margin-top:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+body.img-mode .article-desc{display:none;}
+
+.article-date{font-size:.7rem;color:var(--muted);margin-top:5px;}
+.arrow-icon{flex-shrink:0;color:var(--border);font-size:.9rem;margin-top:2px;transition:color .15s;}
+.article-card:hover .arrow-icon{color:var(--accent2);}
+
+.no-results{text-align:center;padding:48px;color:var(--muted);font-size:.95rem;display:none;}
+.no-results.show{display:block;}
+
+footer{text-align:center;padding:20px;background:var(--primary);color:rgba(255,255,255,.6);font-size:.8rem;}
+footer a{color:rgba(255,255,255,.8);}
+
+/* ===== タブレット（768px以下） ===== */
+@media(max-width:768px){
+  header{padding:16px 18px 14px;}
+  header h1{font-size:1.2rem;}
+  .controls{padding:10px 14px;gap:8px;}
+  .filter-btns{
+    display:flex;flex-wrap:nowrap;overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    gap:6px;padding-bottom:4px;
+    scrollbar-width:none;
+  }
+  .filter-btns::-webkit-scrollbar{display:none;}
+  .filter-btn{flex-shrink:0;font-size:.75rem;padding:5px 11px;}
+  .result-count{margin-left:0;}
+  .main{padding:16px 16px 40px;}
+  .articles{grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;}
+  body.img-mode .articles{grid-template-columns:repeat(auto-fill,minmax(240px,1fr));}
+}
+
+/* ===== スマホ（480px以下） ===== */
+@media(max-width:480px){
+  header{padding:14px 14px 12px;}
+  header h1{font-size:1.05rem;}
+  header p{font-size:.75rem;}
+  .badge{font-size:.7rem;padding:2px 8px;}
+  .header-meta{gap:8px;margin-top:8px;}
+
+  .controls{
+    padding:8px 10px;
+    display:grid;
+    grid-template-columns:1fr auto;
+    grid-template-rows:auto auto;
+    gap:7px;
+  }
+  .search-wrap{grid-column:1;grid-row:1;}
+  .img-toggle{grid-column:2;grid-row:1;font-size:.75rem;padding:4px 9px;}
+  .img-toggle span{display:none;} /* テキスト非表示、ドットのみ */
+  .filter-btns{
+    grid-column:1 / -1;grid-row:2;
+    display:flex;flex-wrap:nowrap;overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    gap:5px;padding-bottom:2px;
+    scrollbar-width:none;
+  }
+  .filter-btns::-webkit-scrollbar{display:none;}
+  .filter-btn{flex-shrink:0;font-size:.72rem;padding:4px 9px;}
+  .result-count{display:none;}
+
+  .main{padding:12px 10px 36px;}
+  .category-title{font-size:.92rem;}
+
+  .articles{grid-template-columns:1fr;gap:8px;}
+  body.img-mode .articles{grid-template-columns:1fr;}
+  body.img-mode .card-img-wrap{height:180px;}
+
+  .card-body{padding:10px 11px 11px;gap:7px;}
+  .article-title{font-size:.85rem;}
+  .article-desc{font-size:.75rem;-webkit-line-clamp:2;}
+  .article-date{font-size:.68rem;}
+
+  .progress-msg{font-size:.72rem;padding:3px 14px;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>📚 教育情報ブログ｜記事まとめ</h1>
+  <p>大学受験を中心に、かゆいところに手が届く入試情報のまとめサイト</p>
+  <div class="header-meta">
+    <span class="badge">全 155 記事</span>
+    <span style="font-size:.8rem;opacity:.7;">最終更新：2026年5月31日</span>
+    <a href="https://add0804.hatenablog.com/" target="_blank" style="font-size:.8rem;color:rgba(255,255,255,.8);">▶ ブログ本体へ</a>
+  </div>
+</header>
+
+<div class="controls">
+  <div class="search-wrap">
+    <span class="s-icon">🔍</span>
+    <input type="text" id="searchInput" placeholder="記事タイトルを検索..." oninput="filterArticles()">
+  </div>
+  <div class="filter-btns">
+    <button class="filter-btn active" onclick="setFilter('all',this)">すべて</button>
+    <button class="filter-btn" onclick="setFilter('出願動向・倍率分析',this)">出願動向・倍率分析</button>
+    <button class="filter-btn" onclick="setFilter('学部・学科情報',this)">学部・学科情報</button>
+    <button class="filter-btn" onclick="setFilter('大学学部情報',this)">大学学部情報</button>
+    <button class="filter-btn" onclick="setFilter('大学受験情報',this)">大学受験情報</button>
+    <button class="filter-btn" onclick="setFilter('入試分析',this)">入試分析</button>
+    <button class="filter-btn" onclick="setFilter('英検・TEAP',this)">英検・TEAP</button>
+    <button class="filter-btn" onclick="setFilter('科目別の勉強',this)">科目別の勉強</button>
+    <button class="filter-btn" onclick="setFilter('大学入試の仕組み',this)">大学入試の仕組み</button>
+    <button class="filter-btn" onclick="setFilter('大学比較',this)">大学比較</button>
+    <button class="filter-btn" onclick="setFilter('その他',this)">その他</button>
+  </div>
+  <button class="img-toggle" id="imgToggle" onclick="toggleImages()">
+    <div class="tdot"></div>
+    <span>アイキャッチ</span>
+  </button>
+  <span class="result-count" id="resultCount">155 件表示</span>
+</div>
+<div class="progress-bar" id="progressBar"></div>
+<div class="progress-msg" id="progressMsg"></div>
+
+<div class="main">
+  <div class="no-results" id="noResults">🔍 該当する記事が見つかりませんでした。</div>
+
+  <div class="category-section" data-cat="出願動向・倍率分析">
+    <div class="category-header"><div class="cat-dot" style="background:#1a3a5c"></div><span class="category-title">出願動向・倍率分析</span><span class="cat-count">23件</span></div>
+    <div class="articles">
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/11/01/235659" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/11/01/235659" style="border-left-color:#1a3a5c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="2025年度 法政大学 出願動向詳細分析" data-loaded="false"><div class="card-img-placeholder">📊</div></div>
+        <div class="card-body">
+          <div class="card-num">1</div>
+          <div class="article-info"><div class="article-title">2025年度 法政大学 出願動向詳細分析</div><div class="article-desc">法政大学2025年度入試の学部別志願者数・倍率を詳細分析。前年比較と出願動向の変化要因を解説します。</div><div class="article-date">2025-11-01</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/10/31/234753" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/10/31/234753" style="border-left-color:#1a3a5c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="2025年度 中央大学 出願動向詳細分析" data-loaded="false"><div class="card-img-placeholder">📊</div></div>
+        <div class="card-body">
+          <div class="card-num">2</div>
+          <div class="article-info"><div class="article-title">2025年度 中央大学 出願動向詳細分析</div><div class="article-desc">中央大学2025年度入試の学部別倍率推移を3年間で比較。倍率増減の主な要因を詳しく解説します。</div><div class="article-date">2025-10-31</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/10/29/225727" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/10/29/225727" style="border-left-color:#1a3a5c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="2025年度 立教大学 出願動向詳細分析" data-loaded="false"><div class="card-img-placeholder">📊</div></div>
+        <div class="card-body">
+          <div class="card-num">3</div>
+          <div class="article-info"><div class="article-title">2025年度 立教大学 出願動向詳細分析</div><div class="article-desc">立教大学2025年度入試の出願動向を詳細分析。英検利用の影響も含め学部別に解説します。</div><div class="article-date">2025-10-29</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/10/28/233451" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/10/28/233451" style="border-left-color:#1a3a5c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="2025年度 青山学院大学 出願動向詳細分析" data-loaded="false"><div class="card-img-placeholder">📊</div></div>
+        <div class="card-body">
+          <div class="card-num">4</div>
+          <div class="article-info"><div class="article-title">2025年度 青山学院大学 出願動向詳細分析</div><div class="article-desc">青山学院大学2025年度入試の倍率・出願動向を学部別に分析。前年との比較を交えて解説します。</div><div class="article-date">2025-10-28</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/10/27/230717" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/10/27/230717" style="border-left-color:#1a3a5c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="2025年度 明治大学 出願動向詳細分析" data-loaded="false"><div class="card-img-placeholder">📊</div></div>
+        <div class="card-body">
+          <div class="card-num">5</div>
+          <div class="article-info"><div class="article-title">2025年度 明治大学 出願動向詳細分析</div><div class="article-desc">明治大学2025年度入試の出願動向を詳細分析。倍率変動の要因を学部ごとに解説します。</div><div class="article-date">2025-10-27</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/10/26/134432" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/10/26/134432" style="border-left-color:#1a3a5c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="2025年度 上智大学 出願動向詳細分析" data-loaded="false"><div class="card-img-placeholder">📊</div></div>
+        <div class="card-body">
+          <div class="card-num">6</div>
+          <div class="article-info"><div class="article-title">2025年度 上智大学 出願動向詳細分析</div><div class="article-desc">上智大学2025年度入試の出願状況・倍率をTEAP利用型も含め詳細分析します。</div><div class="article-date">2025-10-26</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/10/24/104004" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/10/24/104004" style="border-left-color:#1a3a5c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="2025年度 東京理科大学 出願動向詳細分析" data-loaded="false"><div class="card-img-placeholder">📊</div></div>
+        <div class="card-body">
+          <div class="card-num">7</div>
+          <div class="article-info"><div class="article-title">2025年度 東京理科大学 出願動向詳細分析</div><div class="article-desc">東京理科大学2025年度入試の学部別倍率・志願者数を3年間で比較分析します。</div><div class="article-date">2025-10-24</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/10/23/110456" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/10/23/110456" style="border-left-color:#1a3a5c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="2025年度 慶応義塾大学 出願動向詳細分析" data-loaded="false"><div class="card-img-placeholder">📊</div></div>
+        <div class="card-body">
+          <div class="card-num">8</div>
+          <div class="article-info"><div class="article-title">2025年度 慶応義塾大学 出願動向詳細分析</div><div class="article-desc">慶應義塾大学2025年度入試の出願動向を詳細分析。学部別の倍率推移と要因を解説します。</div><div class="article-date">2025-10-23</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/10/14/231602" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/10/14/231602" style="border-left-color:#1a3a5c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="2025年度 早稲田大学 出願動向詳細分析・合格最低点" data-loaded="false"><div class="card-img-placeholder">📊</div></div>
+        <div class="card-body">
+          <div class="card-num">9</div>
+          <div class="article-info"><div class="article-title">2025年度 早稲田大学 出願動向詳細分析・合格最低点</div><div class="article-desc">早稲田大学2025年度入試の出願動向と合格最低点を詳細分析。前年比を交えて解説します。</div><div class="article-date">2025-10-14</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/09/18/085326" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/09/18/085326" style="border-left-color:#1a3a5c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="2025年度 京都大学 出願動向詳細分析" data-loaded="false"><div class="card-img-placeholder">📊</div></div>
+        <div class="card-body">
+          <div class="card-num">10</div>
+          <div class="article-info"><div class="article-title">2025年度 京都大学 出願動向詳細分析</div><div class="article-desc">京都大学2025年度前期日程の学部別倍率を3年間で比較。出願動向の変化要因を解説します。</div><div class="article-date">2025-09-18</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/09/17/001348" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/09/17/001348" style="border-left-color:#1a3a5c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="2025年度 九州大学 出願動向詳細分析" data-loaded="false"><div class="card-img-placeholder">📊</div></div>
+        <div class="card-body">
+          <div class="card-num">11</div>
+          <div class="article-info"><div class="article-title">2025年度 九州大学 出願動向詳細分析</div><div class="article-desc">九州大学2025年度前期一般選抜の学部別倍率推移（2023〜2025年）を比較・分析します。</div><div class="article-date">2025-09-17</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/09/16/003044" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/09/16/003044" style="border-left-color:#1a3a5c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="2025年度 名古屋大学 出願動向詳細分析" data-loaded="false"><div class="card-img-placeholder">📊</div></div>
+        <div class="card-body">
+          <div class="card-num">12</div>
+          <div class="article-info"><div class="article-title">2025年度 名古屋大学 出願動向詳細分析</div><div class="article-desc">名古屋大学2025年度前期入試の学部別倍率と出願動向の変化要因を詳しく解説します。</div><div class="article-date">2025-09-16</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/09/15/111902" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/09/15/111902" style="border-left-color:#1a3a5c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="2025年度 北海道大学 出願動向詳細分析" data-loaded="false"><div class="card-img-placeholder">📊</div></div>
+        <div class="card-body">
+          <div class="card-num">13</div>
+          <div class="article-info"><div class="article-title">2025年度 北海道大学 出願動向詳細分析</div><div class="article-desc">北海道大学の倍率・出願動向を2023〜2025年で比較。総合入試の仕組みも解説します。</div><div class="article-date">2025-09-15</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/09/14/095850" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/09/14/095850" style="border-left-color:#1a3a5c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="2025年度 東北大学 出願動向詳細分析" data-loaded="false"><div class="card-img-placeholder">📊</div></div>
+        <div class="card-body">
+          <div class="card-num">14</div>
+          <div class="article-info"><div class="article-title">2025年度 東北大学 出願動向詳細分析</div><div class="article-desc">東北大学2025年度前期日程の学部・系統別倍率推移を分析。出願動向の変化を解説します。</div><div class="article-date">2025-09-14</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/09/13/091722" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/09/13/091722" style="border-left-color:#1a3a5c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="2025年度 一橋大学 出願動向詳細分析" data-loaded="false"><div class="card-img-placeholder">📊</div></div>
+        <div class="card-body">
+          <div class="card-num">15</div>
+          <div class="article-info"><div class="article-title">2025年度 一橋大学 出願動向詳細分析</div><div class="article-desc">一橋大学の前期倍率・二段階選抜内訳・合格最低点を3年間で比較分析します。</div><div class="article-date">2025-09-13</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/09/12/160338" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/09/12/160338" style="border-left-color:#1a3a5c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="2025年度 横浜国立大学 出願動向詳細分析" data-loaded="false"><div class="card-img-placeholder">📊</div></div>
+        <div class="card-body">
+          <div class="card-num">16</div>
+          <div class="article-info"><div class="article-title">2025年度 横浜国立大学 出願動向詳細分析</div><div class="article-desc">横浜国立大学2025年度の学部別倍率を比較分析。倍率高騰の背景を解説します。</div><div class="article-date">2025-09-12</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/09/11/112819" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/09/11/112819" style="border-left-color:#1a3a5c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="2025年度 千葉大学 出願動向詳細分析" data-loaded="false"><div class="card-img-placeholder">📊</div></div>
+        <div class="card-body">
+          <div class="card-num">17</div>
+          <div class="article-info"><div class="article-title">2025年度 千葉大学 出願動向詳細分析</div><div class="article-desc">千葉大学2025年度入試の学部別倍率推移を3年間で比較。全体的に倍率が高止まりした要因を解説します。</div><div class="article-date">2025-09-11</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/09/10/132354" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/09/10/132354" style="border-left-color:#1a3a5c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="2025年度 東京都立大学 出願動向詳細分析" data-loaded="false"><div class="card-img-placeholder">📊</div></div>
+        <div class="card-body">
+          <div class="card-num">18</div>
+          <div class="article-info"><div class="article-title">2025年度 東京都立大学 出願動向詳細分析</div><div class="article-desc">東京都立大学2025年度一般選抜の出願動向を分析。都内在住者支援制度等による志願者急増の要因を解説します。</div><div class="article-date">2025-09-10</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/07/14/144731" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/07/14/144731" style="border-left-color:#1a3a5c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="2025年度 東京大学 出願動向詳細分析" data-loaded="false"><div class="card-img-placeholder">📊</div></div>
+        <div class="card-body">
+          <div class="card-num">19</div>
+          <div class="article-info"><div class="article-title">2025年度 東京大学 出願動向詳細分析</div><div class="article-desc">東京大学2025年度一般選抜の出願動向を徹底分析。新課程初年度・共通テスト1000点満点化の影響を詳しく解説します。</div><div class="article-date">2025-07-14</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/07/13/103431" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/07/13/103431" style="border-left-color:#1a3a5c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="2025年度 東京科学大学 出願動向詳細分析" data-loaded="false"><div class="card-img-placeholder">📊</div></div>
+        <div class="card-body">
+          <div class="card-num">20</div>
+          <div class="article-info"><div class="article-title">2025年度 東京科学大学 出願動向詳細分析</div><div class="article-desc">東京科学大学2025年度入試の学院・学科別志願者数と倍率を前年と比較分析します。</div><div class="article-date">2025-07-13</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/07/12/174219" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/07/12/174219" style="border-left-color:#1a3a5c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="2025年度 私大入試の出願動向を徹底分析！" data-loaded="false"><div class="card-img-placeholder">📊</div></div>
+        <div class="card-body">
+          <div class="card-num">21</div>
+          <div class="article-info"><div class="article-title">2025年度 私大入試の出願動向を徹底分析！</div><div class="article-desc">2025年度の私大入試はMARCH以上のほぼ全大学で志願者数が前年アップ。その変化要因を分析します。</div><div class="article-date">2025-07-12</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/07/11/104118" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/07/11/104118" style="border-left-color:#1a3a5c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="2025年度 国公立大の出願動向を徹底分析！" data-loaded="false"><div class="card-img-placeholder">📊</div></div>
+        <div class="card-body">
+          <div class="card-num">22</div>
+          <div class="article-info"><div class="article-title">2025年度 国公立大の出願動向を徹底分析！</div><div class="article-desc">2025年度国公立大学の出願動向をまとめ。増減の要因を知ることで自身の出願方針が定まります。</div><div class="article-date">2025-07-11</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/07/11/102119" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/07/11/102119" style="border-left-color:#1a3a5c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="2025年度 大阪大学 出願動向詳細分析" data-loaded="false"><div class="card-img-placeholder">📊</div></div>
+        <div class="card-body">
+          <div class="card-num">23</div>
+          <div class="article-info"><div class="article-title">2025年度 大阪大学 出願動向詳細分析</div><div class="article-desc">大阪大学2025年度前期日程の学部別倍率を分析。出願状況・倍率変動の要因を解説します。</div><div class="article-date">2025-07-11</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="category-section" data-cat="学部・学科情報">
+    <div class="category-header"><div class="cat-dot" style="background:#8e44ad"></div><span class="category-title">学部・学科情報</span><span class="cat-count">22件</span></div>
+    <div class="articles">
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/09/02/113117" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/09/02/113117" style="border-left-color:#8e44ad">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="「成成明学獨國武」の看板学部調査" data-loaded="false"><div class="card-img-placeholder">🎓</div></div>
+        <div class="card-body">
+          <div class="card-num">1</div>
+          <div class="article-info"><div class="article-title">「成成明学獨國武」の看板学部調査</div><div class="article-desc">成成明学獨國武それぞれの大学哲学を凝縮した「看板学部」を紹介。大学選びに役立つ各校の教育特色を解説します。</div><div class="article-date">2025-09-02</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/09/01/214025" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/09/01/214025" style="border-left-color:#8e44ad">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="【学部研究】社会学部の特徴と卒業後の進路" data-loaded="false"><div class="card-img-placeholder">🎓</div></div>
+        <div class="card-body">
+          <div class="card-num">2</div>
+          <div class="article-info"><div class="article-title">【学部研究】社会学部の特徴と卒業後の進路</div><div class="article-desc">社会学部は「社会のなぜ？を解き明かす学問」。学ぶ内容・卒業後の進路・向いている人の特徴を解説します。</div><div class="article-date">2025-09-01</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/08/29/130239" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/08/29/130239" style="border-left-color:#8e44ad">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="【学部研究】理学部（立教大・学習院大・日本女子大）" data-loaded="false"><div class="card-img-placeholder">🎓</div></div>
+        <div class="card-body">
+          <div class="card-num">3</div>
+          <div class="article-info"><div class="article-title">【学部研究】理学部（立教大・学習院大・日本女子大）</div><div class="article-desc">都内私立大学の理学部を比較。立教大・学習院大・日本女子大それぞれの特色と学びの違いを解説します。</div><div class="article-date">2025-08-29</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/08/28/230814" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/08/28/230814" style="border-left-color:#8e44ad">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="【学部研究】理工学部と工学部の違い" data-loaded="false"><div class="card-img-placeholder">🎓</div></div>
+        <div class="card-body">
+          <div class="card-num">4</div>
+          <div class="article-info"><div class="article-title">【学部研究】理工学部と工学部の違い</div><div class="article-desc">理学部と工学部はどちらも科学技術を学ぶが、目的とアプローチが大きく異なります。その違いを徹底解説します。</div><div class="article-date">2025-08-28</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/08/17/105238" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/08/17/105238" style="border-left-color:#8e44ad">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="【学部研究】農学部の特徴と卒業後の進路" data-loaded="false"><div class="card-img-placeholder">🎓</div></div>
+        <div class="card-body">
+          <div class="card-num">5</div>
+          <div class="article-info"><div class="article-title">【学部研究】農学部の特徴と卒業後の進路</div><div class="article-desc">農学部は農業だけじゃない！食・環境・バイオ等幅広い学びの内容と卒業後の多様な進路を紹介します。</div><div class="article-date">2025-08-17</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/08/16/112726" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/08/16/112726" style="border-left-color:#8e44ad">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="【学部研究】データサイエンスの魅力と卒業後の進路" data-loaded="false"><div class="card-img-placeholder">🎓</div></div>
+        <div class="card-body">
+          <div class="card-num">6</div>
+          <div class="article-info"><div class="article-title">【学部研究】データサイエンスの魅力と卒業後の進路</div><div class="article-desc">近年注目の文理融合・データサイエンス系学部の特徴と卒業後の進路・就職先を詳しくまとめました。</div><div class="article-date">2025-08-16</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/08/09/103448" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/08/09/103448" style="border-left-color:#8e44ad">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="私立大学医学部の徹底分析（6年間の学費や奨学金シミュレーション）" data-loaded="false"><div class="card-img-placeholder">🎓</div></div>
+        <div class="card-body">
+          <div class="card-num">7</div>
+          <div class="article-info"><div class="article-title">私立大学医学部の徹底分析（6年間の学費や奨学金シミュレーション）</div><div class="article-desc">私立大学医学部の6年間の学費と奨学金シミュレーションを徹底分析。経済面での選択肢を具体的に解説します。</div><div class="article-date">2025-08-09</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/08/08/100347" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/08/08/100347" style="border-left-color:#8e44ad">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="医学部合格ガイド：国公立医学部合格への道" data-loaded="false"><div class="card-img-placeholder">🎓</div></div>
+        <div class="card-body">
+          <div class="card-num">8</div>
+          <div class="article-info"><div class="article-title">医学部合格ガイド：国公立医学部合格への道</div><div class="article-desc">最高峰の国公立医学部合格に向け、入試問題の特性や面接情報など合格への道を詳しく解説します。</div><div class="article-date">2025-08-08</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/08/07/074426" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/08/07/074426" style="border-left-color:#8e44ad">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="【学部研究】薬学部の特徴と卒業後の進路" data-loaded="false"><div class="card-img-placeholder">🎓</div></div>
+        <div class="card-body">
+          <div class="card-num">9</div>
+          <div class="article-info"><div class="article-title">【学部研究】薬学部の特徴と卒業後の進路</div><div class="article-desc">薬学部卒業後の働き方・収入面・キャリアパスを詳しく解説。6年制と4年制の違いも説明します。</div><div class="article-date">2025-08-07</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/08/06/084612" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/08/06/084612" style="border-left-color:#8e44ad">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="【学部研究】経済学部の特徴と卒業後の進路" data-loaded="false"><div class="card-img-placeholder">🎓</div></div>
+        <div class="card-body">
+          <div class="card-num">10</div>
+          <div class="article-info"><div class="article-title">【学部研究】経済学部の特徴と卒業後の進路</div><div class="article-desc">経済学部は数学を使う分野がある？数学が苦手でも経済学部でやっていけるかを詳しくまとめました。</div><div class="article-date">2025-08-06</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/08/05/151015" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/08/05/151015" style="border-left-color:#8e44ad">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="【学部研究】文学部の特徴と卒業後の進路" data-loaded="false"><div class="card-img-placeholder">🎓</div></div>
+        <div class="card-body">
+          <div class="card-num">11</div>
+          <div class="article-info"><div class="article-title">【学部研究】文学部の特徴と卒業後の進路</div><div class="article-desc">文学部で何を学ぶ？本が好きでなくても大丈夫？卒業後の進路は？気になるテーマを深掘りして解説します。</div><div class="article-date">2025-08-05</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/08/04/150826" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/08/04/150826" style="border-left-color:#8e44ad">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="史学に強い大学を徹底調査" data-loaded="false"><div class="card-img-placeholder">🎓</div></div>
+        <div class="card-body">
+          <div class="card-num">12</div>
+          <div class="article-info"><div class="article-title">史学に強い大学を徹底調査</div><div class="article-desc">歴史好きの生徒のために「史学に強い大学」をピックアップ。各大学の史学分野の特徴をまとめました。</div><div class="article-date">2025-08-04</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/07/29/090120" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/07/29/090120" style="border-left-color:#8e44ad">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="国際系・英語系の学部・学科比較" data-loaded="false"><div class="card-img-placeholder">🎓</div></div>
+        <div class="card-body">
+          <div class="card-num">13</div>
+          <div class="article-info"><div class="article-title">国際系・英語系の学部・学科比較</div><div class="article-desc">上智大・MARCH英語系の学部・学科を徹底比較。将来につながる英語が学べる大学・学部はどこかを分析します。</div><div class="article-date">2025-07-29</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/07/27/114804" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/07/27/114804" style="border-left-color:#8e44ad">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="理系大学の学部・学科研究" data-loaded="false"><div class="card-img-placeholder">🎓</div></div>
+        <div class="card-body">
+          <div class="card-num">14</div>
+          <div class="article-info"><div class="article-title">理系大学の学部・学科研究</div><div class="article-desc">中央大学理工学部を例に、各学科の詳細を分析。理系志望者の「学科が決まらない」問題を解決します。</div><div class="article-date">2025-07-27</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/07/06/085720" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/07/06/085720" style="border-left-color:#8e44ad">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="国内唯一！｜珍しい学部がある国公立大学特集" data-loaded="false"><div class="card-img-placeholder">🎓</div></div>
+        <div class="card-body">
+          <div class="card-num">15</div>
+          <div class="article-info"><div class="article-title">国内唯一！｜珍しい学部がある国公立大学特集</div><div class="article-desc">「そこでしか学べない」ユニークな学部を持つ国公立大学9校を紹介。進路選択の視野を広げます。</div><div class="article-date">2025-07-06</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/06/30/091928" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/06/30/091928" style="border-left-color:#8e44ad">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="高校生必見！｜医療・看護・福祉系人気学部ランキングと就職先" data-loaded="false"><div class="card-img-placeholder">🎓</div></div>
+        <div class="card-body">
+          <div class="card-num">16</div>
+          <div class="article-info"><div class="article-title">高校生必見！｜医療・看護・福祉系人気学部ランキングと就職先</div><div class="article-desc">医療・看護・福祉系の学部・学科と就職先をMBTI相性つきで紹介。進路選択の参考にしてください。</div><div class="article-date">2025-06-30</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/06/29/085946" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/06/29/085946" style="border-left-color:#8e44ad">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="高校生必見！｜理工・情報・AI系人気学部ランキングと就職先" data-loaded="false"><div class="card-img-placeholder">🎓</div></div>
+        <div class="card-body">
+          <div class="card-num">17</div>
+          <div class="article-info"><div class="article-title">高校生必見！｜理工・情報・AI系人気学部ランキングと就職先</div><div class="article-desc">理工・情報・AI系の学部・学科と就職先をMBTI相性つきで紹介。進路選択の参考にしてください。</div><div class="article-date">2025-06-29</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/06/28/103811" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/06/28/103811" style="border-left-color:#8e44ad">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="高校生必見！｜経済・経営・商学系人気学部ランキングと就職先" data-loaded="false"><div class="card-img-placeholder">🎓</div></div>
+        <div class="card-body">
+          <div class="card-num">18</div>
+          <div class="article-info"><div class="article-title">高校生必見！｜経済・経営・商学系人気学部ランキングと就職先</div><div class="article-desc">経済・経営・商学系の学部・学科と就職先をMBTI相性つきで紹介。進路選択の参考にしてください。</div><div class="article-date">2025-06-28</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/06/27/123912" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/06/27/123912" style="border-left-color:#8e44ad">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="高校生必見！｜国際・外国語・社会学系人気学部ランキングと就職先" data-loaded="false"><div class="card-img-placeholder">🎓</div></div>
+        <div class="card-body">
+          <div class="card-num">19</div>
+          <div class="article-info"><div class="article-title">高校生必見！｜国際・外国語・社会学系人気学部ランキングと就職先</div><div class="article-desc">国際・外国語・社会学系の学部・学科と就職先をMBTI相性つきで紹介します。</div><div class="article-date">2025-06-27</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/06/26/115650" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/06/26/115650" style="border-left-color:#8e44ad">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="高校生必見！｜心理学・教育学系人気学部ランキングと就職先" data-loaded="false"><div class="card-img-placeholder">🎓</div></div>
+        <div class="card-body">
+          <div class="card-num">20</div>
+          <div class="article-info"><div class="article-title">高校生必見！｜心理学・教育学系人気学部ランキングと就職先</div><div class="article-desc">心理学・教育学系の学部・学科と就職先をMBTI相性つきで紹介。進路選択の参考にしてください。</div><div class="article-date">2025-06-26</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/06/23/094043" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/06/23/094043" style="border-left-color:#8e44ad">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="各学問が学べる大学・学部一覧（国公立・MARCH以上）" data-loaded="false"><div class="card-img-placeholder">🎓</div></div>
+        <div class="card-body">
+          <div class="card-num">21</div>
+          <div class="article-info"><div class="article-title">各学問が学べる大学・学部一覧（国公立・MARCH以上）</div><div class="article-desc">希望の学問は決まったが大学が決まらない生徒向けに、MARCH以上の大学・学部の選択肢を整理しました。</div><div class="article-date">2025-06-23</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/06/22/121832" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/06/22/121832" style="border-left-color:#8e44ad">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="【決定版】MBTIタイプ別おすすめ学問と職業一覧" data-loaded="false"><div class="card-img-placeholder">🎓</div></div>
+        <div class="card-body">
+          <div class="card-num">22</div>
+          <div class="article-info"><div class="article-title">【決定版】MBTIタイプ別おすすめ学問と職業一覧</div><div class="article-desc">学部・職業が決まらない生徒のために、MBTIを軸にしたおすすめ学部と職業の一覧を作成しました。</div><div class="article-date">2025-06-22</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="category-section" data-cat="大学学部情報">
+    <div class="category-header"><div class="cat-dot" style="background:#1a6b3c"></div><span class="category-title">大学学部情報</span><span class="cat-count">20件</span></div>
+    <div class="articles">
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/10/25/013311" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/10/25/013311" style="border-left-color:#1a6b3c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="東京理科大学の新設学科「創域情報学部」" data-loaded="false"><div class="card-img-placeholder">🏫</div></div>
+        <div class="card-body">
+          <div class="card-num">1</div>
+          <div class="article-info"><div class="article-title">東京理科大学の新設学科「創域情報学部」</div><div class="article-desc">東京理科大学に新設された創域情報学部の概要・カリキュラム・就職先を詳しく解説します。</div><div class="article-date">2025-10-25</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/09/20/092645" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/09/20/092645" style="border-left-color:#1a6b3c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="早稲田大学 創造理工学部｜高校生向け研究室紹介" data-loaded="false"><div class="card-img-placeholder">🏫</div></div>
+        <div class="card-body">
+          <div class="card-num">2</div>
+          <div class="article-info"><div class="article-title">早稲田大学 創造理工学部｜高校生向け研究室紹介</div><div class="article-desc">建築・機械・社会基盤・資源・経営システムまで。「この研究室に入りたい！」を具体化する研究室紹介。</div><div class="article-date">2025-09-20</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/09/19/094454" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/09/19/094454" style="border-left-color:#1a6b3c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="早稲田大学 基幹理工学部｜高校生向け研究室紹介" data-loaded="false"><div class="card-img-placeholder">🏫</div></div>
+        <div class="card-body">
+          <div class="card-num">3</div>
+          <div class="article-info"><div class="article-title">早稲田大学 基幹理工学部｜高校生向け研究室紹介</div><div class="article-desc">数学・情報・機械・電子・表現工学まで。高校生向けにわかりやすく研究室を紹介します。</div><div class="article-date">2025-09-19</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/09/09/134426" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/09/09/134426" style="border-left-color:#1a6b3c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="【大学学部紹介】明治大学生田キャンパス" data-loaded="false"><div class="card-img-placeholder">🏫</div></div>
+        <div class="card-body">
+          <div class="card-num">4</div>
+          <div class="article-info"><div class="article-title">【大学学部紹介】明治大学生田キャンパス</div><div class="article-desc">自然豊かな丘陵地に位置する明治大学生田キャンパス。理工学部と農学部の学び・特色を紹介します。</div><div class="article-date">2025-09-09</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/09/05/094114" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/09/05/094114" style="border-left-color:#1a6b3c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="早稲田大学 先進理工学部｜高校生向け研究室紹介" data-loaded="false"><div class="card-img-placeholder">🏫</div></div>
+        <div class="card-body">
+          <div class="card-num">5</div>
+          <div class="article-info"><div class="article-title">早稲田大学 先進理工学部｜高校生向け研究室紹介</div><div class="article-desc">物理・化学・生命・電気・情報が交差する先進理工学部の研究室をやさしい言葉で紹介します。</div><div class="article-date">2025-09-05</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/08/30/222911" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/08/30/222911" style="border-left-color:#1a6b3c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="中央大学商学部：フリーメジャー・フレックス・フレックスPlus1の違い" data-loaded="false"><div class="card-img-placeholder">🏫</div></div>
+        <div class="card-body">
+          <div class="card-num">6</div>
+          <div class="article-info"><div class="article-title">中央大学商学部：フリーメジャー・フレックス・フレックスPlus1の違い</div><div class="article-desc">中央大学商学部の3コース（フリーメジャー・フレックス・フレックスPlus1）の違いを詳しく解説します。</div><div class="article-date">2025-08-30</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/08/27/233226" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/08/27/233226" style="border-left-color:#1a6b3c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="【大学学部紹介】法政大学多摩キャンパス" data-loaded="false"><div class="card-img-placeholder">🏫</div></div>
+        <div class="card-body">
+          <div class="card-num">7</div>
+          <div class="article-info"><div class="article-title">【大学学部紹介】法政大学多摩キャンパス</div><div class="article-desc">東京都心から離れた自然豊かな法政大学多摩キャンパスの魅力と配置学部を紹介します。</div><div class="article-date">2025-08-27</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/08/26/225210" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/08/26/225210" style="border-left-color:#1a6b3c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="【大学学部紹介】早稲田大学所沢キャンパスの学部" data-loaded="false"><div class="card-img-placeholder">🏫</div></div>
+        <div class="card-body">
+          <div class="card-num">8</div>
+          <div class="article-info"><div class="article-title">【大学学部紹介】早稲田大学所沢キャンパスの学部</div><div class="article-desc">スポーツ科学部・人間科学部が集う早稲田大学所沢キャンパスの学びと特徴を詳しく紹介します。</div><div class="article-date">2025-08-26</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/08/25/123427" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/08/25/123427" style="border-left-color:#1a6b3c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="【大学学部紹介】立教大学新座キャンパスの学部" data-loaded="false"><div class="card-img-placeholder">🏫</div></div>
+        <div class="card-body">
+          <div class="card-num">9</div>
+          <div class="article-info"><div class="article-title">【大学学部紹介】立教大学新座キャンパスの学部</div><div class="article-desc">緑豊かな立教大学新座キャンパスに集う4学部（現代心理・観光・コミュニティ福祉・スポーツウエルネス）を紹介します。</div><div class="article-date">2025-08-25</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/08/24/230650" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/08/24/230650" style="border-left-color:#1a6b3c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="【大学学部紹介】慶應義塾大学湘南藤沢キャンパスの学部" data-loaded="false"><div class="card-img-placeholder">🏫</div></div>
+        <div class="card-body">
+          <div class="card-num">10</div>
+          <div class="article-info"><div class="article-title">【大学学部紹介】慶應義塾大学湘南藤沢キャンパスの学部</div><div class="article-desc">文理融合・課題解決型の学びが特徴の慶應SFCの総合政策学部・環境情報学部を詳しく紹介します。</div><div class="article-date">2025-08-24</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/08/19/150514" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/08/19/150514" style="border-left-color:#1a6b3c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="【大学学部紹介】青山学院大学相模原キャンパスの学部" data-loaded="false"><div class="card-img-placeholder">🏫</div></div>
+        <div class="card-body">
+          <div class="card-num">11</div>
+          <div class="article-info"><div class="article-title">【大学学部紹介】青山学院大学相模原キャンパスの学部</div><div class="article-desc">青山学院大学相模原キャンパスのユニークな3学部（理工・社情・地球社会共生）を解説します。</div><div class="article-date">2025-08-19</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/08/18/141829" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/08/18/141829" style="border-left-color:#1a6b3c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="【大学学部紹介】明治大学総合数理学部" data-loaded="false"><div class="card-img-placeholder">🏫</div></div>
+        <div class="card-body">
+          <div class="card-num">12</div>
+          <div class="article-info"><div class="article-title">【大学学部紹介】明治大学総合数理学部</div><div class="article-desc">「数学×情報」で未来を創る明治大学総合数理学部の3学科の特色とカリキュラムを解説します。</div><div class="article-date">2025-08-18</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/08/14/114221" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/08/14/114221" style="border-left-color:#1a6b3c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="立教大学の新設学部「環境学部」" data-loaded="false"><div class="card-img-placeholder">🏫</div></div>
+        <div class="card-body">
+          <div class="card-num">13</div>
+          <div class="article-info"><div class="article-title">立教大学の新設学部「環境学部」</div><div class="article-desc">文理融合×フィールド実践が特徴の立教大学環境学部（設置構想中）の概要を詳しく調査しました。</div><div class="article-date">2025-08-14</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/08/13/122810" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/08/13/122810" style="border-left-color:#1a6b3c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="東京理科大学の新設学科「理学部第一部 科学コミュニケーション学科」" data-loaded="false"><div class="card-img-placeholder">🏫</div></div>
+        <div class="card-body">
+          <div class="card-num">14</div>
+          <div class="article-info"><div class="article-title">東京理科大学の新設学科「理学部第一部 科学コミュニケーション学科」</div><div class="article-desc">東京理科大学に2026年に新設される「科学コミュニケーション学科」の詳細をまとめました。</div><div class="article-date">2025-08-13</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/08/02/102758" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/08/02/102758" style="border-left-color:#1a6b3c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="東京理科大学の魅力と特徴" data-loaded="false"><div class="card-img-placeholder">🏫</div></div>
+        <div class="card-body">
+          <div class="card-num">15</div>
+          <div class="article-info"><div class="article-title">東京理科大学の魅力と特徴</div><div class="article-desc">「実力主義」で異彩を放つ東京理科大学。早慶にはない独自の教育理念と強みを徹底解説します。</div><div class="article-date">2025-08-02</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/08/01/115248" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/08/01/115248" style="border-left-color:#1a6b3c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="成蹊大学理工学部の魅力と特徴" data-loaded="false"><div class="card-img-placeholder">🏫</div></div>
+        <div class="card-body">
+          <div class="card-num">16</div>
+          <div class="article-info"><div class="article-title">成蹊大学理工学部の魅力と特徴</div><div class="article-desc">2024年に新校舎が完成した成蹊大学理工学部の知られざる強みと特色を詳しく解説します。</div><div class="article-date">2025-08-01</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/07/30/101343" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/07/30/101343" style="border-left-color:#1a6b3c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="実は理系もある！？上智大学理工学部の研究" data-loaded="false"><div class="card-img-placeholder">🏫</div></div>
+        <div class="card-body">
+          <div class="card-num">17</div>
+          <div class="article-info"><div class="article-title">実は理系もある！？上智大学理工学部の研究</div><div class="article-desc">文系のイメージが強い上智大学だが実は理工学部がある。文理融合教育の特色を詳しく解説します。</div><div class="article-date">2025-07-30</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/07/25/090834" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/07/25/090834" style="border-left-color:#1a6b3c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="MARCHを超える評価を受ける芝浦工業大学" data-loaded="false"><div class="card-img-placeholder">🏫</div></div>
+        <div class="card-body">
+          <div class="card-num">18</div>
+          <div class="article-info"><div class="article-title">MARCHを超える評価を受ける芝浦工業大学</div><div class="article-desc">研究分野においてMARCH以上の評価を受けることも多い芝浦工業大学の特徴と魅力をまとめます。</div><div class="article-date">2025-07-25</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/07/23/101612" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/07/23/101612" style="border-left-color:#1a6b3c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="上智大学 英語系の学部・学科比較" data-loaded="false"><div class="card-img-placeholder">🏫</div></div>
+        <div class="card-body">
+          <div class="card-num">19</div>
+          <div class="article-info"><div class="article-title">上智大学 英語系の学部・学科比較</div><div class="article-desc">英語に興味がある生徒が選択肢に入れる上智大学の英語系4学部・学科の特徴を比較します。</div><div class="article-date">2025-07-23</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/07/22/104530" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/07/22/104530" style="border-left-color:#1a6b3c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="立教大学 英語系の学部・学科比較" data-loaded="false"><div class="card-img-placeholder">🏫</div></div>
+        <div class="card-body">
+          <div class="card-num">20</div>
+          <div class="article-info"><div class="article-title">立教大学 英語系の学部・学科比較</div><div class="article-desc">英語を活かしたい生徒向けに、立教大学の英語系学部・学科の違いと選び方を解説します。</div><div class="article-date">2025-07-22</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="category-section" data-cat="大学受験情報">
+    <div class="category-header"><div class="cat-dot" style="background:#c0392b"></div><span class="category-title">大学受験情報</span><span class="cat-count">17件</span></div>
+    <div class="articles">
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2026/05/31/144055" target="_blank" data-url="https://add0804.hatenablog.com/entry/2026/05/31/144055" style="border-left-color:#c0392b">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="大学受験情報2027-2028年度入試の変更点まとめ" data-loaded="false"><div class="card-img-placeholder">📋</div></div>
+        <div class="card-body">
+          <div class="card-num">1</div>
+          <div class="article-info"><div class="article-title">大学受験情報2027-2028年度入試の変更点まとめ</div><div class="article-desc">東大新学部・慶應経済小論文廃止・東京科学大配点変更など2027〜2028年度入試の主要変更点を解説します。</div><div class="article-date">2026-05-31</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/10/03/142433" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/10/03/142433" style="border-left-color:#c0392b">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="大学調べの方法｜志望校決定までの流れ" data-loaded="false"><div class="card-img-placeholder">📋</div></div>
+        <div class="card-body">
+          <div class="card-num">2</div>
+          <div class="article-info"><div class="article-title">大学調べの方法｜志望校決定までの流れ</div><div class="article-desc">ChatGPTを活用した大学調べの方法を紹介。軸づくり・比較・深掘り・戦略化の手順を具体的に解説します。</div><div class="article-date">2025-10-03</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/09/27/230211" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/09/27/230211" style="border-left-color:#c0392b">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="年内入試（適性検査型）を調査" data-loaded="false"><div class="card-img-placeholder">📋</div></div>
+        <div class="card-body">
+          <div class="card-num">3</div>
+          <div class="article-info"><div class="article-title">年内入試（適性検査型）を調査</div><div class="article-desc">2026年度の適性検査型総合型選抜・公募推薦（他大学併願可）を東京・神奈川・千葉・埼玉でまとめました。</div><div class="article-date">2025-09-27</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/09/23/165730" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/09/23/165730" style="border-left-color:#c0392b">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="国語が現代文のみの私立大学（日東駒専以上）" data-loaded="false"><div class="card-img-placeholder">📋</div></div>
+        <div class="card-body">
+          <div class="card-num">4</div>
+          <div class="article-info"><div class="article-title">国語が現代文のみの私立大学（日東駒専以上）</div><div class="article-desc">一般入試・共通テストで国語を「現代文のみ」で受験できる大学・学部を日東駒専以上で網羅しました。</div><div class="article-date">2025-09-23</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/09/21/225027" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/09/21/225027" style="border-left-color:#c0392b">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="成成明学以上で記述問題が出る大学を調査" data-loaded="false"><div class="card-img-placeholder">📋</div></div>
+        <div class="card-body">
+          <div class="card-num">5</div>
+          <div class="article-info"><div class="article-title">成成明学以上で記述問題が出る大学を調査</div><div class="article-desc">成成明学以上の私立大学で一般選抜に記述（論述）問題が出題される学部・方式・科目をまとめました。</div><div class="article-date">2025-09-21</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/09/04/114950" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/09/04/114950" style="border-left-color:#c0392b">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="神奈川大学｜給費生入試と総合型選抜（適性検査型）" data-loaded="false"><div class="card-img-placeholder">📋</div></div>
+        <div class="card-body">
+          <div class="card-num">6</div>
+          <div class="article-info"><div class="article-title">神奈川大学｜給費生入試と総合型選抜（適性検査型）</div><div class="article-desc">年内に合否が決まる神奈川大学の給費生入試と適性検査型総合型選抜の仕組みを詳しく解説します。</div><div class="article-date">2025-09-04</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/09/03/101341" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/09/03/101341" style="border-left-color:#c0392b">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="東洋大学｜総合型選抜 基礎学力テスト型" data-loaded="false"><div class="card-img-placeholder">📋</div></div>
+        <div class="card-body">
+          <div class="card-num">7</div>
+          <div class="article-info"><div class="article-title">東洋大学｜総合型選抜 基礎学力テスト型</div><div class="article-desc">東洋大学の総合型選抜・基礎学力テスト型の志願者数・合格者数・倍率と学部別得点率を掲載します。</div><div class="article-date">2025-09-03</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/07/31/074625" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/07/31/074625" style="border-left-color:#c0392b">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="女子大の魅力と特徴" data-loaded="false"><div class="card-img-placeholder">📋</div></div>
+        <div class="card-body">
+          <div class="card-num">8</div>
+          <div class="article-info"><div class="article-title">女子大の魅力と特徴</div><div class="article-desc">選択肢から外しがちな女子大の意外な魅力と特徴を解説。皆さんが思っている以上にすごいです！</div><div class="article-date">2025-07-31</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/07/27/112655" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/07/27/112655" style="border-left-color:#c0392b">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="中央大学 2026年理工学部の再編" data-loaded="false"><div class="card-img-placeholder">📋</div></div>
+        <div class="card-body">
+          <div class="card-num">9</div>
+          <div class="article-info"><div class="article-title">中央大学 2026年理工学部の再編</div><div class="article-desc">2026年に再編される中央大学理工学部の新しい学部・学科の詳細をまとめ、進路選択に役立てます。</div><div class="article-date">2025-07-27</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/07/26/100614" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/07/26/100614" style="border-left-color:#c0392b">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="2025年～2027年 新設学部調査" data-loaded="false"><div class="card-img-placeholder">📋</div></div>
+        <div class="card-body">
+          <div class="card-num">10</div>
+          <div class="article-info"><div class="article-title">2025年～2027年 新設学部調査</div><div class="article-desc">近年続く学部・学科の新設・改編。2025〜2027年に行われる新設学部・学科を網羅してまとめました。</div><div class="article-date">2025-07-26</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/07/24/120148" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/07/24/120148" style="border-left-color:#c0392b">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="理系の卒業後の進路：大学院進学 vs 就職" data-loaded="false"><div class="card-img-placeholder">📋</div></div>
+        <div class="card-body">
+          <div class="card-num">11</div>
+          <div class="article-info"><div class="article-title">理系の卒業後の進路：大学院進学 vs 就職</div><div class="article-desc">理系進学者は大学院進学か就職かを早めに考える必要があります。2つの進路の違いを詳しく解説します。</div><div class="article-date">2025-07-24</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/07/21/100451" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/07/21/100451" style="border-left-color:#c0392b">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="総合型選抜・公募推薦の最新動向" data-loaded="false"><div class="card-img-placeholder">📋</div></div>
+        <div class="card-body">
+          <div class="card-num">12</div>
+          <div class="article-info"><div class="article-title">総合型選抜・公募推薦の最新動向</div><div class="article-desc">大学レベルごとの総合型選抜・公募推薦の募集人数の変化をまとめ、最新の入試動向を解説します。</div><div class="article-date">2025-07-21</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/07/15/113740" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/07/15/113740" style="border-left-color:#c0392b">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="MARCH おすすめ併願パターン" data-loaded="false"><div class="card-img-placeholder">📋</div></div>
+        <div class="card-body">
+          <div class="card-num">13</div>
+          <div class="article-info"><div class="article-title">MARCH おすすめ併願パターン</div><div class="article-desc">英語の出題傾向に着目してMARCHのおすすめ併願パターンを解説。受験校組みの参考にしてください。</div><div class="article-date">2025-07-15</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/07/02/094846" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/07/02/094846" style="border-left-color:#c0392b">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="共通テスト理科1科目で受験できる国公立大学（理系）" data-loaded="false"><div class="card-img-placeholder">📋</div></div>
+        <div class="card-body">
+          <div class="card-num">14</div>
+          <div class="article-info"><div class="article-title">共通テスト理科1科目で受験できる国公立大学（理系）</div><div class="article-desc">理科2科目が最大の関門となる国公立理系受験生向けに、理科1科目で受験できる国公立大学を紹介します。</div><div class="article-date">2025-07-02</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/06/25/092701" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/06/25/092701" style="border-left-color:#c0392b">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="共通テスト4教科以下で受験可能な国公立大学一覧" data-loaded="false"><div class="card-img-placeholder">📋</div></div>
+        <div class="card-body">
+          <div class="card-num">15</div>
+          <div class="article-info"><div class="article-title">共通テスト4教科以下で受験可能な国公立大学一覧</div><div class="article-desc">受験教科が多くて国公立は難しいと感じている生徒向けに、少ない教科で受験できる国公立大学を紹介します。</div><div class="article-date">2025-06-25</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/06/20/101623" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/06/20/101623" style="border-left-color:#c0392b">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="【大学入試】推薦入試の種類と違い・効果的な対策" data-loaded="false"><div class="card-img-placeholder">📋</div></div>
+        <div class="card-body">
+          <div class="card-num">16</div>
+          <div class="article-info"><div class="article-title">【大学入試】推薦入試の種類と違い・効果的な対策</div><div class="article-desc">増加傾向にある大学の推薦入試。種類・違い・特徴・対策方法などをわかりやすくまとめました。</div><div class="article-date">2025-06-20</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/06/19/093403" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/06/19/093403" style="border-left-color:#c0392b">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="他大学との併願が可能な総合型選抜・公募制推薦入試一覧" data-loaded="false"><div class="card-img-placeholder">📋</div></div>
+        <div class="card-body">
+          <div class="card-num">17</div>
+          <div class="article-info"><div class="article-title">他大学との併願が可能な総合型選抜・公募制推薦入試一覧</div><div class="article-desc">他大学を併願可能な推薦入試を実施している大学・学部の一覧。年内に滑り止めを確保できます。</div><div class="article-date">2025-06-19</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="category-section" data-cat="入試分析">
+    <div class="category-header"><div class="cat-dot" style="background:#d68910"></div><span class="category-title">入試分析</span><span class="cat-count">15件</span></div>
+    <div class="articles">
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/11/17/120422" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/11/17/120422" style="border-left-color:#d68910">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="慶應の学部別の英語の特徴と対策方法" data-loaded="false"><div class="card-img-placeholder">🔍</div></div>
+        <div class="card-body">
+          <div class="card-num">1</div>
+          <div class="article-info"><div class="article-title">慶應の学部別の英語の特徴と対策方法</div><div class="article-desc">慶應義塾大学の学部別英語出題傾向を2025年度を基準に分析。効果的な対策方法を解説します。</div><div class="article-date">2025-11-17</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/11/14/112415" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/11/14/112415" style="border-left-color:#d68910">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="早稲田の学部別英語の特徴と対策方法" data-loaded="false"><div class="card-img-placeholder">🔍</div></div>
+        <div class="card-body">
+          <div class="card-num">2</div>
+          <div class="article-info"><div class="article-title">早稲田の学部別英語の特徴と対策方法</div><div class="article-desc">早稲田大学の学部別英語出題傾向を2025年度分析。学部ごとの特徴と対策方法を解説します。</div><div class="article-date">2025-11-14</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/09/25/225931" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/09/25/225931" style="border-left-color:#d68910">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="早稲田大学とMARCHの国語の違い" data-loaded="false"><div class="card-img-placeholder">🔍</div></div>
+        <div class="card-body">
+          <div class="card-num">3</div>
+          <div class="article-info"><div class="article-title">早稲田大学とMARCHの国語の違い</div><div class="article-desc">早稲田大学とMARCH（明治・青山学院・立教・中央・法政）の国語の出題傾向の違いを解説します。</div><div class="article-date">2025-09-25</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/09/24/104817" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/09/24/104817" style="border-left-color:#d68910">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="【入試問題研究】早稲田大学の国語" data-loaded="false"><div class="card-img-placeholder">🔍</div></div>
+        <div class="card-body">
+          <div class="card-num">4</div>
+          <div class="article-info"><div class="article-title">【入試問題研究】早稲田大学の国語</div><div class="article-desc">早稲田大学の学部別「国語の目安得点」と当日の解き方・順番を試験仕様に合わせて整理します。</div><div class="article-date">2025-09-24</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/08/23/185713" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/08/23/185713" style="border-left-color:#d68910">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="早慶理系化学の特徴と国公立との相性" data-loaded="false"><div class="card-img-placeholder">🔍</div></div>
+        <div class="card-body">
+          <div class="card-num">5</div>
+          <div class="article-info"><div class="article-title">早慶理系化学の特徴と国公立との相性</div><div class="article-desc">早稲田vs慶應の理工学部化学入試を徹底比較。旧帝大との類似点・相性から対策法まで解説します。</div><div class="article-date">2025-08-23</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/08/22/182706" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/08/22/182706" style="border-left-color:#d68910">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="早慶理系物理の特徴と国公立との相性" data-loaded="false"><div class="card-img-placeholder">🔍</div></div>
+        <div class="card-body">
+          <div class="card-num">6</div>
+          <div class="article-info"><div class="article-title">早慶理系物理の特徴と国公立との相性</div><div class="article-desc">早稲田vs慶應の理工学部物理入試を徹底比較。国公立第一志望者にとっての相性も解説します。</div><div class="article-date">2025-08-22</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/08/21/223227" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/08/21/223227" style="border-left-color:#d68910">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="早慶理系数学の特徴と国公立との相性" data-loaded="false"><div class="card-img-placeholder">🔍</div></div>
+        <div class="card-body">
+          <div class="card-num">7</div>
+          <div class="article-info"><div class="article-title">早慶理系数学の特徴と国公立との相性</div><div class="article-desc">早慶理系数学の難易度と出題傾向の違い、旧帝レベルとの比較と対策を詳しく解説します。</div><div class="article-date">2025-08-21</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/08/20/171920" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/08/20/171920" style="border-left-color:#d68910">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="MARCH理系学部(数学・物理・化学)の難易比較" data-loaded="false"><div class="card-img-placeholder">🔍</div></div>
+        <div class="card-body">
+          <div class="card-num">8</div>
+          <div class="article-info"><div class="article-title">MARCH理系学部(数学・物理・化学)の難易比較</div><div class="article-desc">MARCH理系学部の数学・物理・化学を難易度比較。志望学部に合わせた「取れる点」の作り方を解説します。</div><div class="article-date">2025-08-20</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/07/16/111619" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/07/16/111619" style="border-left-color:#d68910">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="意外と知らない 法政大学の入試の特徴" data-loaded="false"><div class="card-img-placeholder">🔍</div></div>
+        <div class="card-body">
+          <div class="card-num">9</div>
+          <div class="article-info"><div class="article-title">意外と知らない 法政大学の入試の特徴</div><div class="article-desc">英語の共通問題・古文漢文の独立問題なし等、他のMARCHと異なる法政大学の特殊な入試制度を解説します。</div><div class="article-date">2025-07-16</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/07/08/103203" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/07/08/103203" style="border-left-color:#d68910">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="【上智大学】TEAP利用型＆共通テスト併用型入試を徹底解説！" data-loaded="false"><div class="card-img-placeholder">🔍</div></div>
+        <div class="card-body">
+          <div class="card-num">10</div>
+          <div class="article-info"><div class="article-title">【上智大学】TEAP利用型＆共通テスト併用型入試を徹底解説！</div><div class="article-desc">少し特殊な上智大学の入試形式の全貌と、各入試の特徴・傾向・対策を詳しく解説します。</div><div class="article-date">2025-07-08</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/07/07/102828" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/07/07/102828" style="border-left-color:#d68910">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="【立教大学】学部 学科別 英検 CSEスコア 合格の目安" data-loaded="false"><div class="card-img-placeholder">🔍</div></div>
+        <div class="card-body">
+          <div class="card-num">11</div>
+          <div class="article-info"><div class="article-title">【立教大学】学部 学科別 英検 CSEスコア 合格の目安</div><div class="article-desc">立教大学が公表している数字から学部・学科別の目標CSEスコアを算出。受験対策の目標設定に役立ちます。</div><div class="article-date">2025-07-07</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/07/05/095540" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/07/05/095540" style="border-left-color:#d68910">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="【大学入試】英語の徹底比較 分析：早稲田理工系 vs 慶應理工" data-loaded="false"><div class="card-img-placeholder">🔍</div></div>
+        <div class="card-body">
+          <div class="card-num">12</div>
+          <div class="article-info"><div class="article-title">【大学入試】英語の徹底比較 分析：早稲田理工系 vs 慶應理工</div><div class="article-desc">難関国公立第一志望の生徒向けに、早慶理工系英語の出題傾向を比較・分析。相性の判断基準を示します。</div><div class="article-date">2025-07-05</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/07/04/104754" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/07/04/104754" style="border-left-color:#d68910">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="【徹底分析】早慶とMARCHの世界史の違いと効果的な対策法" data-loaded="false"><div class="card-img-placeholder">🔍</div></div>
+        <div class="card-body">
+          <div class="card-num">13</div>
+          <div class="article-info"><div class="article-title">【徹底分析】早慶とMARCHの世界史の違いと効果的な対策法</div><div class="article-desc">早慶とMARCHの世界史入試の違いを詳細分析。それぞれに有効な効果的な対策方法も解説します。</div><div class="article-date">2025-07-04</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/07/03/120258" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/07/03/120258" style="border-left-color:#d68910">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="【徹底分析】早慶とMARCHの日本史の違いと効果的な対策法" data-loaded="false"><div class="card-img-placeholder">🔍</div></div>
+        <div class="card-body">
+          <div class="card-num">14</div>
+          <div class="article-info"><div class="article-title">【徹底分析】早慶とMARCHの日本史の違いと効果的な対策法</div><div class="article-desc">早慶とMARCHの日本史入試の違いを詳細分析。それぞれに有効な効果的な対策方法も解説します。</div><div class="article-date">2025-07-03</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/07/01/095125" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/07/01/095125" style="border-left-color:#d68910">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="【徹底比較】早慶とMARCHの日本史・世界史入試の違い" data-loaded="false"><div class="card-img-placeholder">🔍</div></div>
+        <div class="card-body">
+          <div class="card-num">15</div>
+          <div class="article-info"><div class="article-title">【徹底比較】早慶とMARCHの日本史・世界史入試の違い</div><div class="article-desc">早慶とMARCHの大きな壁を日本史・世界史で具体的に示します。入試問題の質的・量的な違いを解説します。</div><div class="article-date">2025-07-01</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="category-section" data-cat="英検・TEAP">
+    <div class="category-header"><div class="cat-dot" style="background:#1a7a9c"></div><span class="category-title">英検・TEAP</span><span class="cat-count">10件</span></div>
+    <div class="articles">
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/11/11/235125" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/11/11/235125" style="border-left-color:#1a7a9c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="英検CSEスコア2200点の正答率（英検2級と英検準1級）" data-loaded="false"><div class="card-img-placeholder">🌐</div></div>
+        <div class="card-body">
+          <div class="card-num">1</div>
+          <div class="article-info"><div class="article-title">英検CSEスコア2200点の正答率（英検2級と英検準1級）</div><div class="article-desc">英検CSEスコア2200点を取るための正答率を英検2級・準1級それぞれで分析しています。</div><div class="article-date">2025-11-11</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/11/10/235928" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/11/10/235928" style="border-left-color:#1a7a9c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="早慶MARCHの英検利用を徹底解説" data-loaded="false"><div class="card-img-placeholder">🌐</div></div>
+        <div class="card-body">
+          <div class="card-num">2</div>
+          <div class="article-info"><div class="article-title">早慶MARCHの英検利用を徹底解説</div><div class="article-desc">早慶MARCH各大学の英検利用入試の仕組み・利用方法・必要スコアを徹底解説します。</div><div class="article-date">2025-11-10</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/10/07/144707" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/10/07/144707" style="border-left-color:#1a7a9c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="TEAP対策｜対策方法とおススメの参考書" data-loaded="false"><div class="card-img-placeholder">🌐</div></div>
+        <div class="card-body">
+          <div class="card-num">3</div>
+          <div class="article-info"><div class="article-title">TEAP対策｜対策方法とおススメの参考書</div><div class="article-desc">4技能型試験TEAPの試験構造を理解した上で、効果的な対策方法とおすすめ参考書を紹介します。</div><div class="article-date">2025-10-07</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/09/30/231538" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/09/30/231538" style="border-left-color:#1a7a9c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="大学受験：英検は「いつから使える？」「いつまで受けられる？」" data-loaded="false"><div class="card-img-placeholder">🌐</div></div>
+        <div class="card-body">
+          <div class="card-num">4</div>
+          <div class="article-info"><div class="article-title">大学受験：英検は「いつから使える？」「いつまで受けられる？」</div><div class="article-desc">英検の大学入試利用に関して「いつから有効か」「いつまでに取得すべきか」を詳しく解説します。</div><div class="article-date">2025-09-30</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/09/29/220249" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/09/29/220249" style="border-left-color:#1a7a9c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="英検2級に短期間で合格！おススメの参考書と効果的な学習法" data-loaded="false"><div class="card-img-placeholder">🌐</div></div>
+        <div class="card-body">
+          <div class="card-num">5</div>
+          <div class="article-info"><div class="article-title">英検2級に短期間で合格！おススメの参考書と効果的な学習法</div><div class="article-desc">大学受験に向けて最短で英検2級に合格したい受験生向けに、おすすめ参考書と勉強法を紹介します。</div><div class="article-date">2025-09-29</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/09/28/005328" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/09/28/005328" style="border-left-color:#1a7a9c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="英検準1級合格の秘訣！効果的な学習法と参考書の選び方" data-loaded="false"><div class="card-img-placeholder">🌐</div></div>
+        <div class="card-body">
+          <div class="card-num">6</div>
+          <div class="article-info"><div class="article-title">英検準1級合格の秘訣！効果的な学習法と参考書の選び方</div><div class="article-desc">英検準1級の語彙・長文・リスニング・ライティング対策に効果的な参考書を分野別に厳選して紹介します。</div><div class="article-date">2025-09-28</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/08/03/093405" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/08/03/093405" style="border-left-color:#1a7a9c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="英検CSEスコア2300：英検準1級と2級の比較" data-loaded="false"><div class="card-img-placeholder">🌐</div></div>
+        <div class="card-body">
+          <div class="card-num">7</div>
+          <div class="article-info"><div class="article-title">英検CSEスコア2300：英検準1級と2級の比較</div><div class="article-desc">CSEスコア2300点を英検準1級と英検2級のどちらで狙うのがいいか、タイプ別にまとめました。</div><div class="article-date">2025-08-03</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/07/20/073003" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/07/20/073003" style="border-left-color:#1a7a9c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="TEAP スコア300点突破への道" data-loaded="false"><div class="card-img-placeholder">🌐</div></div>
+        <div class="card-body">
+          <div class="card-num">8</div>
+          <div class="article-info"><div class="article-title">TEAP スコア300点突破への道</div><div class="article-desc">TEAPのスコア300点突破までの道のりを、イチから仕組みを説明しながら戦略的に解説します。</div><div class="article-date">2025-07-20</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/07/17/113856" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/07/17/113856" style="border-left-color:#1a7a9c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="英検準1級：CSEスコアで2300点突破への道" data-loaded="false"><div class="card-img-placeholder">🌐</div></div>
+        <div class="card-body">
+          <div class="card-num">9</div>
+          <div class="article-info"><div class="article-title">英検準1級：CSEスコアで2300点突破への道</div><div class="article-desc">大学受験と両立しながらCSE2300点を突破するための、高校生向け戦略的学習ガイドです。</div><div class="article-date">2025-07-17</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/06/17/092347" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/06/17/092347" style="border-left-color:#1a7a9c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="【大学入試】英検とTEAPの違いを徹底解説" data-loaded="false"><div class="card-img-placeholder">🌐</div></div>
+        <div class="card-body">
+          <div class="card-num">10</div>
+          <div class="article-info"><div class="article-title">【大学入試】英検とTEAPの違いを徹底解説</div><div class="article-desc">上智入試で使われるTEAPと英検の違いをわかりやすくまとめました。</div><div class="article-date">2025-06-17</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="category-section" data-cat="科目別の勉強">
+    <div class="category-header"><div class="cat-dot" style="background:#1a6b5c"></div><span class="category-title">科目別の勉強</span><span class="cat-count">21件</span></div>
+    <div class="articles">
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/11/09/171430" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/11/09/171430" style="border-left-color:#1a6b5c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="国公立文系 共通テストの「数学」はどうやって対策する？" data-loaded="false"><div class="card-img-placeholder">📖</div></div>
+        <div class="card-body">
+          <div class="card-num">1</div>
+          <div class="article-info"><div class="article-title">国公立文系 共通テストの「数学」はどうやって対策する？</div><div class="article-desc">数学が苦手な国公立文系志望者向けに、共通テスト数学の効果的な対策法を詳しく解説します。</div><div class="article-date">2025-11-09</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/11/08/133738" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/11/08/133738" style="border-left-color:#1a6b5c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="国公立理系「地理」「公共・倫理」「公共・政経」はいつから準備する？" data-loaded="false"><div class="card-img-placeholder">📖</div></div>
+        <div class="card-body">
+          <div class="card-num">2</div>
+          <div class="article-info"><div class="article-title">国公立理系「地理」「公共・倫理」「公共・政経」はいつから準備する？</div><div class="article-desc">国公立理系受験生の地歴・公民科目はいつから準備すべきか。時期・方法・参考書を解説します。</div><div class="article-date">2025-11-08</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/11/07/154240" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/11/07/154240" style="border-left-color:#1a6b5c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="【慶應義塾大学】小論文の特徴と対策方法（2025年最新版）" data-loaded="false"><div class="card-img-placeholder">📖</div></div>
+        <div class="card-body">
+          <div class="card-num">3</div>
+          <div class="article-info"><div class="article-title">【慶應義塾大学】小論文の特徴と対策方法（2025年最新版）</div><div class="article-desc">慶應義塾大学の学部別小論文の特徴と効果的な対策方法を2025年度の最新情報をもとに解説します。</div><div class="article-date">2025-11-07</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/11/06/121931" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/11/06/121931" style="border-left-color:#1a6b5c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="セミナー生物の特徴と効果的な使い方" data-loaded="false"><div class="card-img-placeholder">📖</div></div>
+        <div class="card-body">
+          <div class="card-num">4</div>
+          <div class="article-info"><div class="article-title">セミナー生物の特徴と効果的な使い方</div><div class="article-desc">定番参考書「セミナー生物」の特徴と志望校レベル別の効果的な使い方を詳しく解説します。</div><div class="article-date">2025-11-06</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/11/05/101631" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/11/05/101631" style="border-left-color:#1a6b5c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="セミナー物理の特徴と効果的な使い方" data-loaded="false"><div class="card-img-placeholder">📖</div></div>
+        <div class="card-body">
+          <div class="card-num">5</div>
+          <div class="article-info"><div class="article-title">セミナー物理の特徴と効果的な使い方</div><div class="article-desc">定番参考書「セミナー物理」の特徴と志望校レベル別の効果的な使い方を詳しく解説します。</div><div class="article-date">2025-11-05</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/11/02/113814" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/11/02/113814" style="border-left-color:#1a6b5c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="セミナー化学の特徴と効果的な使い方" data-loaded="false"><div class="card-img-placeholder">📖</div></div>
+        <div class="card-body">
+          <div class="card-num">6</div>
+          <div class="article-info"><div class="article-title">セミナー化学の特徴と効果的な使い方</div><div class="article-desc">定番参考書「セミナー化学」の特徴と志望校レベル別の効果的な使い方を詳しく解説します。</div><div class="article-date">2025-11-02</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/10/30/104009" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/10/30/104009" style="border-left-color:#1a6b5c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="志望校別の学習戦略：青チャートの使い方" data-loaded="false"><div class="card-img-placeholder">📖</div></div>
+        <div class="card-body">
+          <div class="card-num">7</div>
+          <div class="article-info"><div class="article-title">志望校別の学習戦略：青チャートの使い方</div><div class="article-desc">志望校のレベルに合わせた青チャートの正しい使い方・到達目標・次のステップを詳しく解説します。</div><div class="article-date">2025-10-30</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/10/22/105531" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/10/22/105531" style="border-left-color:#1a6b5c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="【迷ったらコレ】共通テスト社会選択の最終判断！地理・公共・政経の徹底比較" data-loaded="false"><div class="card-img-placeholder">📖</div></div>
+        <div class="card-body">
+          <div class="card-num">8</div>
+          <div class="article-info"><div class="article-title">【迷ったらコレ】共通テスト社会選択の最終判断！地理・公共・政経の徹底比較</div><div class="article-desc">地理・公共倫理・公共政経で迷っている受験生向けに、特徴・難易度・向き不向きを徹底比較します。</div><div class="article-date">2025-10-22</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/10/21/190448" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/10/21/190448" style="border-left-color:#1a6b5c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="【迷ったらコレ】社会選択の最終判断！日本史・世界史を徹底比較" data-loaded="false"><div class="card-img-placeholder">📖</div></div>
+        <div class="card-body">
+          <div class="card-num">9</div>
+          <div class="article-info"><div class="article-title">【迷ったらコレ】社会選択の最終判断！日本史・世界史を徹底比較</div><div class="article-desc">日本史か世界史かで迷っている受験生向けに、特徴・難易度・向き不向きを徹底比較します。</div><div class="article-date">2025-10-21</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/10/20/113902" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/10/20/113902" style="border-left-color:#1a6b5c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="【迷ったらコレ】理科選択の最終判断！物理・化学・生物を徹底比較" data-loaded="false"><div class="card-img-placeholder">📖</div></div>
+        <div class="card-body">
+          <div class="card-num">10</div>
+          <div class="article-info"><div class="article-title">【迷ったらコレ】理科選択の最終判断！物理・化学・生物を徹底比較</div><div class="article-desc">物理・化学・生物で迷っている受験生向けに、特徴・難易度・向き不向きを徹底比較します。</div><div class="article-date">2025-10-20</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/10/19/172913" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/10/19/172913" style="border-left-color:#1a6b5c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="大学受験で地学基礎の選択の可能性" data-loaded="false"><div class="card-img-placeholder">📖</div></div>
+        <div class="card-body">
+          <div class="card-num">11</div>
+          <div class="article-info"><div class="article-title">大学受験で地学基礎の選択の可能性</div><div class="article-desc">大学受験で地学基礎を選択することの可能性とリスク、向いている生徒を詳しく解説します。</div><div class="article-date">2025-10-19</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/10/16/112924" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/10/16/112924" style="border-left-color:#1a6b5c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="大学受験：正しい生物の学習法とおススメの参考書" data-loaded="false"><div class="card-img-placeholder">📖</div></div>
+        <div class="card-body">
+          <div class="card-num">12</div>
+          <div class="article-info"><div class="article-title">大学受験：正しい生物の学習法とおススメの参考書</div><div class="article-desc">生物を得意科目にするための正しい学習法とおすすめ参考書を詳しく解説します。</div><div class="article-date">2025-10-16</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/10/15/111144" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/10/15/111144" style="border-left-color:#1a6b5c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="大学受験：情報Ⅰの勉強法とおススメの参考書" data-loaded="false"><div class="card-img-placeholder">📖</div></div>
+        <div class="card-body">
+          <div class="card-num">13</div>
+          <div class="article-info"><div class="article-title">大学受験：情報Ⅰの勉強法とおススメの参考書</div><div class="article-desc">新課程で必須科目となった情報Ⅰの効果的な勉強法とおすすめ参考書を詳しく解説します。</div><div class="article-date">2025-10-15</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/10/13/235215" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/10/13/235215" style="border-left-color:#1a6b5c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="大学受験：効率の良い漢文の学習法とおススメの参考書" data-loaded="false"><div class="card-img-placeholder">📖</div></div>
+        <div class="card-body">
+          <div class="card-num">14</div>
+          <div class="article-info"><div class="article-title">大学受験：効率の良い漢文の学習法とおススメの参考書</div><div class="article-desc">コストパフォーマンスの高い漢文を短期間で得意科目にするための効率的な学習法を解説します。</div><div class="article-date">2025-10-13</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/10/12/233431" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/10/12/233431" style="border-left-color:#1a6b5c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="大学受験：正しい古文の学習法とおススメの参考書" data-loaded="false"><div class="card-img-placeholder">📖</div></div>
+        <div class="card-body">
+          <div class="card-num">15</div>
+          <div class="article-info"><div class="article-title">大学受験：正しい古文の学習法とおススメの参考書</div><div class="article-desc">古文は正しい手順で学習すれば短期間で成績を伸ばせます。正しい学習ステップとおすすめ参考書を解説。</div><div class="article-date">2025-10-12</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/10/11/130128" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/10/11/130128" style="border-left-color:#1a6b5c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="大学受験：正しい物理の学習法とおススメの参考書" data-loaded="false"><div class="card-img-placeholder">📖</div></div>
+        <div class="card-body">
+          <div class="card-num">16</div>
+          <div class="article-info"><div class="article-title">大学受験：正しい物理の学習法とおススメの参考書</div><div class="article-desc">公式の丸暗記ではなく概念理解から始める正しい物理の学習法とおすすめ参考書を解説します。</div><div class="article-date">2025-10-11</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/10/09/102115" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/10/09/102115" style="border-left-color:#1a6b5c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="大学受験：正しい化学の学習法とおススメの参考書" data-loaded="false"><div class="card-img-placeholder">📖</div></div>
+        <div class="card-body">
+          <div class="card-num">17</div>
+          <div class="article-info"><div class="article-title">大学受験：正しい化学の学習法とおススメの参考書</div><div class="article-desc">化学を安定した得点源にするための正しい学習法とレベル別おすすめ参考書を詳しく解説します。</div><div class="article-date">2025-10-09</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/10/08/121945" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/10/08/121945" style="border-left-color:#1a6b5c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="大学受験：正しい日本史・世界史の学習法とおススメの参考書" data-loaded="false"><div class="card-img-placeholder">📖</div></div>
+        <div class="card-body">
+          <div class="card-num">18</div>
+          <div class="article-info"><div class="article-title">大学受験：正しい日本史・世界史の学習法とおススメの参考書</div><div class="article-desc">日本史・世界史の最短合格ルートとおすすめ参考書を解説。独学が非効率な理由も説明します。</div><div class="article-date">2025-10-08</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/10/06/234513" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/10/06/234513" style="border-left-color:#1a6b5c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="大学受験：正しい現代文の学習法とおススメの参考書" data-loaded="false"><div class="card-img-placeholder">📖</div></div>
+        <div class="card-body">
+          <div class="card-num">19</div>
+          <div class="article-info"><div class="article-title">大学受験：正しい現代文の学習法とおススメの参考書</div><div class="article-desc">感覚やセンスではなく明確な根拠を持って解く。正しい現代文の学習法とおすすめ参考書を解説します。</div><div class="article-date">2025-10-06</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/10/04/130749" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/10/04/130749" style="border-left-color:#1a6b5c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="大学受験：正しい数学の学習法とおススメの参考書" data-loaded="false"><div class="card-img-placeholder">📖</div></div>
+        <div class="card-body">
+          <div class="card-num">20</div>
+          <div class="article-info"><div class="article-title">大学受験：正しい数学の学習法とおススメの参考書</div><div class="article-desc">授業と参考書の相乗効果を最大化する正しい数学学習法。レベル別おすすめ参考書も紹介します。</div><div class="article-date">2025-10-04</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/07/19/112239" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/07/19/112239" style="border-left-color:#1a6b5c">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="大学受験や英検に役立つ 日々のリスニング対策法" data-loaded="false"><div class="card-img-placeholder">📖</div></div>
+        <div class="card-body">
+          <div class="card-num">21</div>
+          <div class="article-info"><div class="article-title">大学受験や英検に役立つ 日々のリスニング対策法</div><div class="article-desc">TedTalksを活用したおすすめのリスニング対策法を紹介。毎日続けられる具体的な方法を解説します。</div><div class="article-date">2025-07-19</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="category-section" data-cat="大学入試の仕組み">
+    <div class="category-header"><div class="cat-dot" style="background:#2e4053"></div><span class="category-title">大学入試の仕組み</span><span class="cat-count">7件</span></div>
+    <div class="articles">
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/09/08/115426" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/09/08/115426" style="border-left-color:#2e4053">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="【大学受験】国公立・私立の出願の流れと注意点" data-loaded="false"><div class="card-img-placeholder">⚙️</div></div>
+        <div class="card-body">
+          <div class="card-num">1</div>
+          <div class="article-info"><div class="article-title">【大学受験】国公立・私立の出願の流れと注意点</div><div class="article-desc">国公立・私立大学それぞれの出願から合格発表までの流れと注意点をわかりやすくまとめます。</div><div class="article-date">2025-09-08</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/09/07/032633" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/09/07/032633" style="border-left-color:#2e4053">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="【大学受験】受験校選び/受験校組みのポイント" data-loaded="false"><div class="card-img-placeholder">⚙️</div></div>
+        <div class="card-body">
+          <div class="card-num">2</div>
+          <div class="article-info"><div class="article-title">【大学受験】受験校選び/受験校組みのポイント</div><div class="article-desc">後悔のない受験校選びのための8つのポイント。日程・難易度・相性など戦略的な組み方を解説します。</div><div class="article-date">2025-09-07</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/09/06/140807" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/09/06/140807" style="border-left-color:#2e4053">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="【大学受験】共通テスト利用入試の活用方法" data-loaded="false"><div class="card-img-placeholder">⚙️</div></div>
+        <div class="card-body">
+          <div class="card-num">3</div>
+          <div class="article-info"><div class="article-title">【大学受験】共通テスト利用入試の活用方法</div><div class="article-desc">共通テスト利用入試を使いこなす！合格の鍵は「戦略的な活用」にあります。正しい使い方を解説します。</div><div class="article-date">2025-09-06</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/08/31/235120" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/08/31/235120" style="border-left-color:#2e4053">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="共通テスト「第1解答科目／第2解答科目」の落とし穴" data-loaded="false"><div class="card-img-placeholder">⚙️</div></div>
+        <div class="card-body">
+          <div class="card-num">4</div>
+          <div class="article-info"><div class="article-title">共通テスト「第1解答科目／第2解答科目」の落とし穴</div><div class="article-desc">共通テストの第1解答科目・第2解答科目の仕組みと、知らないと失敗する落とし穴を解説します。</div><div class="article-date">2025-08-31</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/08/15/110523" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/08/15/110523" style="border-left-color:#2e4053">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="【大学受験】英語外部検定試験利用入試（英検利用入試）の仕組み" data-loaded="false"><div class="card-img-placeholder">⚙️</div></div>
+        <div class="card-body">
+          <div class="card-num">5</div>
+          <div class="article-info"><div class="article-title">【大学受験】英語外部検定試験利用入試（英検利用入試）の仕組み</div><div class="article-desc">英検はもはや「資格」ではなく入試の得点源。英検利用入試の仕組みと正しい活用方法を解説します。</div><div class="article-date">2025-08-15</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/08/11/134322" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/08/11/134322" style="border-left-color:#2e4053">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="【大学受験】共通テスト利用／併用の仕組みと流れ" data-loaded="false"><div class="card-img-placeholder">⚙️</div></div>
+        <div class="card-body">
+          <div class="card-num">6</div>
+          <div class="article-info"><div class="article-title">【大学受験】共通テスト利用／併用の仕組みと流れ</div><div class="article-desc">ほぼ全大学で実施される共通テスト利用・併用入試の仕組みと正しい活用方法をわかりやすくまとめます。</div><div class="article-date">2025-08-11</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/08/10/133425" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/08/10/133425" style="border-left-color:#2e4053">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="【大学受験】「全学部統一入試」と「学部別入試」の違い" data-loaded="false"><div class="card-img-placeholder">⚙️</div></div>
+        <div class="card-body">
+          <div class="card-num">7</div>
+          <div class="article-info"><div class="article-title">【大学受験】「全学部統一入試」と「学部別入試」の違い</div><div class="article-desc">複雑な大学入試の仕組みをわかりやすく解説。全学部統一入試と学部別入試の違いをまとめます。</div><div class="article-date">2025-08-10</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="category-section" data-cat="大学比較">
+    <div class="category-header"><div class="cat-dot" style="background:#7d3c98"></div><span class="category-title">大学比較</span><span class="cat-count">5件</span></div>
+    <div class="articles">
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/10/05/003631" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/10/05/003631" style="border-left-color:#7d3c98">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="日東駒専の違い｜日東駒専どこを受ける？" data-loaded="false"><div class="card-img-placeholder">⚖️</div></div>
+        <div class="card-body">
+          <div class="card-num">1</div>
+          <div class="article-info"><div class="article-title">日東駒専の違い｜日東駒専どこを受ける？</div><div class="article-desc">英検の活かし方・方式の違い・受験モデルまで、2026年度を見据えた日東駒専の受け方をまとめます。</div><div class="article-date">2025-10-05</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/10/02/233609" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/10/02/233609" style="border-left-color:#7d3c98">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="青山学院大学vs立教大学の進学先調査" data-loaded="false"><div class="card-img-placeholder">⚖️</div></div>
+        <div class="card-body">
+          <div class="card-num">2</div>
+          <div class="article-info"><div class="article-title">青山学院大学vs立教大学の進学先調査</div><div class="article-desc">青学と立教に両方合格したらどちらを選ぶ？学部ごとの比較と進学傾向を調査します。</div><div class="article-date">2025-10-02</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/10/01/232826" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/10/01/232826" style="border-left-color:#7d3c98">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="芝浦工業大学vsMARCH理系の進学先調査" data-loaded="false"><div class="card-img-placeholder">⚖️</div></div>
+        <div class="card-body">
+          <div class="card-num">3</div>
+          <div class="article-info"><div class="article-title">芝浦工業大学vsMARCH理系の進学先調査</div><div class="article-desc">芝浦工業大学とMARCH理系にW合格した場合の進学傾向と学部別の違いを比較します。</div><div class="article-date">2025-10-01</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/09/26/110243" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/09/26/110243" style="border-left-color:#7d3c98">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="早稲田大学vs慶應義塾大学の進学先調査" data-loaded="false"><div class="card-img-placeholder">⚖️</div></div>
+        <div class="card-body">
+          <div class="card-num">4</div>
+          <div class="article-info"><div class="article-title">早稲田大学vs慶應義塾大学の進学先調査</div><div class="article-desc">早慶W合格者の進学傾向と学部別の特徴比較。どちらを選ぶかの判断材料を提供します。</div><div class="article-date">2025-09-26</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/07/23/110801" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/07/23/110801" style="border-left-color:#7d3c98">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="【高校生必見！】立教大学 vs 上智大学 英語系学部徹底比較！" data-loaded="false"><div class="card-img-placeholder">⚖️</div></div>
+        <div class="card-body">
+          <div class="card-num">5</div>
+          <div class="article-info"><div class="article-title">【高校生必見！】立教大学 vs 上智大学 英語系学部徹底比較！</div><div class="article-desc">英語を活かしたい高校生向けに、立教大学と上智大学の英語系学部・学科を徹底比較します。</div><div class="article-date">2025-07-23</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="category-section" data-cat="その他">
+    <div class="category-header"><div class="cat-dot" style="background:#5d6d7e"></div><span class="category-title">その他</span><span class="cat-count">15件</span></div>
+    <div class="articles">
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2026/06/01/103915" target="_blank" data-url="https://add0804.hatenablog.com/entry/2026/06/01/103915" style="border-left-color:#5d6d7e">
+        <div class="card-img-wrap"><img class="card-img" src="https://cdn-ak.f.st-hatena.com/images/fotolife/a/add0804/20260601/20260601103818.png" alt="【共通テスト利用入試】合格基準ガイド2026（MARCH以上）" data-loaded="false"><div class="card-img-placeholder">💡</div></div>
+        <div class="card-body">
+          <div class="card-num">1</div>
+          <div class="article-info"><div class="article-title">【共通テスト利用入試】合格基準ガイド2026（MARCH以上）</div><div class="article-desc">MARCH以上の共通テスト利用入試の合格基準を学部・方式別に一覧化。河合塾データをもとに難易度ランクで整理しています。</div><div class="article-date">2026-06-01</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/10/18/222433" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/10/18/222433" style="border-left-color:#5d6d7e">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="進路振り分け（進振り）がある大学とその仕組み" data-loaded="false"><div class="card-img-placeholder">💡</div></div>
+        <div class="card-body">
+          <div class="card-num">2</div>
+          <div class="article-info"><div class="article-title">進路振り分け（進振り）がある大学とその仕組み</div><div class="article-desc">進振り制度がある大学の仕組みとメリット・デメリット、向いている生徒の特徴を解説します。</div><div class="article-date">2025-10-18</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/10/17/111447" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/10/17/111447" style="border-left-color:#5d6d7e">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="志望校合格に必要な勉強時間 日東駒専から難関国公立まで" data-loaded="false"><div class="card-img-placeholder">💡</div></div>
+        <div class="card-body">
+          <div class="card-num">2</div>
+          <div class="article-info"><div class="article-title">志望校合格に必要な勉強時間 日東駒専から難関国公立まで</div><div class="article-desc">日東駒専から難関国公立まで、志望校合格に必要な目安の勉強時間を解説します。</div><div class="article-date">2025-10-17</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/10/10/122426" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/10/10/122426" style="border-left-color:#5d6d7e">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="共通テストまであと100日" data-loaded="false"><div class="card-img-placeholder">💡</div></div>
+        <div class="card-body">
+          <div class="card-num">3</div>
+          <div class="article-info"><div class="article-title">共通テストまであと100日</div><div class="article-desc">共通テストまで残り100日で何をすべきか。「何を」「いつまでに」「どうやるか」の戦略を解説します。</div><div class="article-date">2025-10-10</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/09/22/111539" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/09/22/111539" style="border-left-color:#5d6d7e">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="東進・河合塾・代ゼミの2学期実施模試の特徴" data-loaded="false"><div class="card-img-placeholder">💡</div></div>
+        <div class="card-body">
+          <div class="card-num">4</div>
+          <div class="article-info"><div class="article-title">東進・河合塾・代ゼミの2学期実施模試の特徴</div><div class="article-desc">2学期の模試を戦略的に活用しよう！各予備校の模試の特徴と賢い活用方法をまとめました。</div><div class="article-date">2025-09-22</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/08/12/093205" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/08/12/093205" style="border-left-color:#5d6d7e">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="学歴フィルターの考察" data-loaded="false"><div class="card-img-placeholder">💡</div></div>
+        <div class="card-body">
+          <div class="card-num">5</div>
+          <div class="article-info"><div class="article-title">学歴フィルターの考察</div><div class="article-desc">「学歴フィルターって本当にあるの？」高校生の疑問に答えながら、現状と向き合い方を解説します。</div><div class="article-date">2025-08-12</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/07/28/120546" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/07/28/120546" style="border-left-color:#5d6d7e">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="【英語の疑問】 「almost」と「most」の違い" data-loaded="false"><div class="card-img-placeholder">💡</div></div>
+        <div class="card-body">
+          <div class="card-num">6</div>
+          <div class="article-info"><div class="article-title">【英語の疑問】 「almost」と「most」の違い</div><div class="article-desc">高校受験・大学受験でも出題される「almost」と「most」の使い分けを中学生でもわかるように解説します。</div><div class="article-date">2025-07-28</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/07/18/105940" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/07/18/105940" style="border-left-color:#5d6d7e">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="【英語の疑問】byとuntil(till)の使い分け" data-loaded="false"><div class="card-img-placeholder">💡</div></div>
+        <div class="card-body">
+          <div class="card-num">7</div>
+          <div class="article-info"><div class="article-title">【英語の疑問】byとuntil(till)の使い分け</div><div class="article-desc">高校入試・大学入試でよく出題されるbyとuntil(till)の使い分けをわかりやすくまとめました。</div><div class="article-date">2025-07-18</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/07/11/095253" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/07/11/095253" style="border-left-color:#5d6d7e">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="「足切り予告点」とは？" data-loaded="false"><div class="card-img-placeholder">💡</div></div>
+        <div class="card-body">
+          <div class="card-num">8</div>
+          <div class="article-info"><div class="article-title">「足切り予告点」とは？</div><div class="article-desc">国公立大受験で見逃せない「足切り予告点」の意味・確認方法・活用法を高校生にもわかりやすく解説します。</div><div class="article-date">2025-07-11</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/07/10/123204" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/07/10/123204" style="border-left-color:#5d6d7e">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="主要模試５社の特徴を徹底比較！" data-loaded="false"><div class="card-img-placeholder">💡</div></div>
+        <div class="card-body">
+          <div class="card-num">9</div>
+          <div class="article-info"><div class="article-title">主要模試５社の特徴を徹底比較！</div><div class="article-desc">どの模試を受けたらよいか迷う受験生向けに、主要5社の模試の強み・弱みを比較・解説します。</div><div class="article-date">2025-07-10</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/07/09/121732" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/07/09/121732" style="border-left-color:#5d6d7e">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="大学受験勉強 × ChatGPT" data-loaded="false"><div class="card-img-placeholder">💡</div></div>
+        <div class="card-body">
+          <div class="card-num">10</div>
+          <div class="article-info"><div class="article-title">大学受験勉強 × ChatGPT</div><div class="article-desc">受験勉強にAIを活用する時代に。ChatGPT・Geminiの大学受験への活用方法と注意点をまとめました。</div><div class="article-date">2025-07-09</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/06/24/105351" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/06/24/105351" style="border-left-color:#5d6d7e">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="【高校数学】2次方程式の応用問題を徹底解説｜解と係数の関係" data-loaded="false"><div class="card-img-placeholder">💡</div></div>
+        <div class="card-body">
+          <div class="card-num">11</div>
+          <div class="article-info"><div class="article-title">【高校数学】2次方程式の応用問題を徹底解説｜解と係数の関係</div><div class="article-desc">「解と係数の関係」の応用問題を例題形式で解説。考え方の基本を身につけましょう。</div><div class="article-date">2025-06-24</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/06/21/130705" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/06/21/130705" style="border-left-color:#5d6d7e">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="【英語の疑問】a と the の使い分け" data-loaded="false"><div class="card-img-placeholder">💡</div></div>
+        <div class="card-body">
+          <div class="card-num">12</div>
+          <div class="article-info"><div class="article-title">【英語の疑問】a と the の使い分け</div><div class="article-desc">英語の素朴な疑問としてよくあがる「aとtheの違い」について、わかりやすくまとめました。</div><div class="article-date">2025-06-21</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/06/18/105658" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/06/18/105658" style="border-left-color:#5d6d7e">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="【高校数学】2次方程式の基本を徹底解説｜解と係数の関係の公式一覧と使い方" data-loaded="false"><div class="card-img-placeholder">💡</div></div>
+        <div class="card-body">
+          <div class="card-num">13</div>
+          <div class="article-info"><div class="article-title">【高校数学】2次方程式の基本を徹底解説｜解と係数の関係の公式一覧と使い方</div><div class="article-desc">定期テストでよく出る「解と係数の関係」の公式と使い方をまとめました。基礎から応用力アップへ。</div><div class="article-date">2025-06-18</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+      <a class="article-card" href="https://add0804.hatenablog.com/entry/2025/06/16/201603" target="_blank" data-url="https://add0804.hatenablog.com/entry/2025/06/16/201603" style="border-left-color:#5d6d7e">
+        <div class="card-img-wrap"><img class="card-img" src="" alt="【大学入試】2026年度大学入学共通テストのWeb出願手順と注意点" data-loaded="false"><div class="card-img-placeholder">💡</div></div>
+        <div class="card-body">
+          <div class="card-num">14</div>
+          <div class="article-info"><div class="article-title">【大学入試】2026年度大学入学共通テストのWeb出願手順と注意点</div><div class="article-desc">2026年度からオンライン化される共通テスト出願の流れの変更点と注意点をまとめました。</div><div class="article-date">2025-06-16</div></div>
+          <span class="arrow-icon">↗</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</div><!-- /.main -->
+<footer><p>© 教育情報ブログ｜<a href="https://add0804.hatenablog.com/" target="_blank">add0804.hatenablog.com</a></p></footer>
+
+<script>
+// =========================================
+// 既知の画像URL（og:imageから取得済み）
+// =========================================
+const KNOWN_IMGS = {
+  "https://add0804.hatenablog.com/entry/2025/10/14/231602":"https://cdn-ak.f.st-hatena.com/images/fotolife/a/add0804/20251014/20251014233144.png",
+  "https://add0804.hatenablog.com/entry/2025/10/31/234753":"https://cdn-ak.f.st-hatena.com/images/fotolife/a/add0804/20251105/20251105125505.png",
+  "https://add0804.hatenablog.com/entry/2025/10/29/225727":"https://cdn-ak.f.st-hatena.com/images/fotolife/a/add0804/20251105/20251105125013.png",
+  "https://add0804.hatenablog.com/entry/2025/10/28/233451":"https://cdn-ak.f.st-hatena.com/images/fotolife/a/add0804/20251105/20251105124542.png",
+  "https://add0804.hatenablog.com/entry/2025/10/27/230717":"https://cdn-ak.f.st-hatena.com/images/fotolife/a/add0804/20251105/20251105123956.png",
+};
+
+// =========================================
+// フィルター・検索
+// =========================================
+let currentFilter = 'all';
+let imgMode = false;
+let imagesStarted = false;
+
+// sessionStorageを使って画像URLをキャッシュ
+const IMG_CACHE_KEY = 'hatena_img_cache_add0804';
+function getCache() {
+  try { return JSON.parse(sessionStorage.getItem(IMG_CACHE_KEY) || '{}'); } catch(e){ return {}; }
+}
+function saveCache(cache) {
+  try { sessionStorage.setItem(IMG_CACHE_KEY, JSON.stringify(cache)); } catch(e){}
+}
+
+function setFilter(cat, btn) {
+  currentFilter = cat;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  filterArticles();
+}
+function filterArticles() {
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+  let count = 0;
+  document.querySelectorAll('.category-section').forEach(sec => {
+    const catMatch = currentFilter === 'all' || sec.dataset.cat === currentFilter;
+    let vis = false;
+    sec.querySelectorAll('.article-card').forEach(card => {
+      const t = card.querySelector('.article-title').textContent.toLowerCase();
+      const show = catMatch && (q === '' || t.includes(q));
+      card.style.display = show ? '' : 'none';
+      if (show) { vis = true; count++; }
+    });
+    sec.style.display = vis ? '' : 'none';
+  });
+  document.getElementById('resultCount').textContent = count + ' 件表示';
+  document.getElementById('noResults').classList.toggle('show', count === 0);
+}
+
+// =========================================
+// アイキャッチ画像の取得
+// =========================================
+function toggleImages() {
+  imgMode = !imgMode;
+  document.getElementById('imgToggle').classList.toggle('on', imgMode);
+  document.body.classList.toggle('img-mode', imgMode);
+  if (imgMode && !imagesStarted) {
+    imagesStarted = true;
+    loadAllImages();
+  }
+}
+
+// og:imageから cdn-ak URLを取得する
+async function fetchOgImage(articleUrl) {
+  // キャッシュ確認
+  const cache = getCache();
+  if (cache[articleUrl]) return cache[articleUrl];
+  if (KNOWN_IMGS[articleUrl]) {
+    cache[articleUrl] = KNOWN_IMGS[articleUrl];
+    saveCache(cache);
+    return KNOWN_IMGS[articleUrl];
+  }
+
+  try {
+    // はてなブログ記事ページを直接フェッチ（same-origin制限なし）
+    const res = await fetch(articleUrl, { signal: AbortSignal.timeout(10000) });
+    if (!res.ok) return null;
+    const text = await res.text();
+    // og:imageを抽出
+    let m = text.match(/property="og:image"\s+content="([^"]+)"/);
+    if (!m) m = text.match(/content="([^"]+)"\s+property="og:image"/);
+    if (m) {
+      const ogUrl = m[1];
+      // cdn-ak URLをデコード
+      const cdnMatch = ogUrl.match(/https%3A%2F%2F(cdn-ak\.f\.st-hatena\.com[^"&]+)/);
+      if (cdnMatch) {
+        const imgUrl = 'https://' + decodeURIComponent(cdnMatch[1]);
+        cache[articleUrl] = imgUrl;
+        saveCache(cache);
+        return imgUrl;
+      }
+      // cdn-akが見つからない場合はog:imageそのまま使用
+      cache[articleUrl] = ogUrl;
+      saveCache(cache);
+      return ogUrl;
+    }
+  } catch(e) {}
+  return null;
+}
+
+async function loadAllImages() {
+  const cards = Array.from(document.querySelectorAll('.article-card[data-url]'));
+  const bar = document.getElementById('progressBar');
+  const msg = document.getElementById('progressMsg');
+  bar.classList.add('active');
+  msg.classList.add('active');
+
+  let done = 0;
+  const total = cards.length;
+
+  // 8件ずつ並列処理
+  const BATCH = 8;
+  for (let i = 0; i < cards.length; i += BATCH) {
+    const batch = cards.slice(i, i + BATCH);
+    await Promise.all(batch.map(async card => {
+      const url = card.dataset.url;
+      const imgEl = card.querySelector('.card-img');
+      if (!imgEl || imgEl.dataset.loaded === 'true') { done++; return; }
+
+      const imgUrl = await fetchOgImage(url);
+      if (imgUrl) {
+        imgEl.src = imgUrl;
+        imgEl.onload = () => { imgEl.classList.add('loaded'); imgEl.dataset.loaded = 'true'; };
+        imgEl.onerror = () => { imgEl.src = ''; imgEl.dataset.loaded = 'error'; };
+      }
+      done++;
+      const pct = Math.round(done / total * 100);
+      bar.style.width = pct + '%';
+      msg.textContent = `画像を読み込み中... ${done}/${total} (${pct}%)`;
+    }));
+  }
+
+  setTimeout(() => {
+    bar.classList.remove('active');
+    msg.classList.remove('active');
+  }, 1200);
+}
+</script>
+</body>
+</html>
