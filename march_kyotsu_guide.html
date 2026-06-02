@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MARCH以上 共通テスト利用入試 合格基準ガイド</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #181c27;
+    --surface2: #1e2435;
+    --border: #2a3048;
+    --accent: #4f8ef7;
+    --accent2: #e56b6f;
+    --text: #e8ecf4;
+    --text-sub: #8892aa;
+    --rank-A: #ff6b6b;
+    --rank-B: #ff9f43;
+    --rank-C: #f9ca24;
+    --rank-D: #6ab04c;
+    --rank-E: #74b9ff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+  }
+
+  /* はてなブログ等への埋め込み対応: bodyではなく #app で背景を管理 */
+  #app {
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-family: 'Noto Sans JP', sans-serif;
+    /* この記事だけ: smoothテーマの #main-inner の余白を打ち消す */
+    margin-left: -28px !important;
+    margin-right: -28px !important;
+  }
+
+  /* ─── HEADER ─── */
+  header {
+    background: linear-gradient(135deg, #0f1117 0%, #1a2040 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 24px 16px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+  }
+
+  .header-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+
+  header h1 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: #e8ecf4 !important;
+    margin-bottom: 6px;
+  }
+
+  header h1 span {
+    color: #4f8ef7 !important;
+  }
+
+  header p.subtitle {
+    font-size: 0.78rem;
+    color: #8892aa !important;
+    letter-spacing: 0.03em;
+  }
+
+  /* ─── CONTROLS ─── */
+  .controls {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 20px 16px 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: flex-start;
+  }
+
+  .control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .control-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-sub);
+  }
+
+  .btn-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .filter-btn {
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    color: var(--text-sub);
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    white-space: nowrap;
+  }
+
+  .filter-btn:hover {
+    border-color: var(--accent);
+    color: var(--text);
+  }
+
+  .filter-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+    font-weight: 700;
+  }
+
+  .rank-btn[data-rank="A"].active { background: var(--rank-A); border-color: var(--rank-A); }
+  .rank-btn[data-rank="B"].active { background: var(--rank-B); border-color: var(--rank-B); }
+  .rank-btn[data-rank="C"].active { background: var(--rank-C); border-color: var(--rank-C); color: #111; }
+  .rank-btn[data-rank="D"].active { background: var(--rank-D); border-color: var(--rank-D); }
+  .rank-btn[data-rank="E"].active { background: var(--rank-E); border-color: var(--rank-E); }
+
+  /* ─── RANK LEGEND ─── */
+  .legend {
+    max-width: 1280px;
+    margin: 20px auto 0;
+    padding: 0 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    color: var(--text-sub);
+  }
+
+  .legend-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ─── STATS BAR ─── */
+  .stats-bar {
+    max-width: 1280px;
+    margin: 20px auto 0;
+    padding: 0 16px;
+    font-size: 0.78rem;
+    color: var(--text-sub);
+  }
+
+  .stats-bar span {
+    color: var(--accent);
+    font-weight: 700;
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* ─── TABLE WRAPPER ─── */
+  .table-wrap {
+    max-width: 1280px;
+    margin: 24px auto 60px;
+    padding: 0 16px;
+  }
+
+  /* ─── UNIVERSITY SECTION ─── */
+  .univ-section {
+    margin-bottom: 40px;
+  }
+
+  .univ-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--border);
+  }
+
+  .univ-name {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .univ-avg {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--text-sub);
+    background: var(--surface2);
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+
+  .univ-count {
+    font-size: 0.72rem;
+    color: var(--text-sub);
+    margin-left: auto;
+  }
+
+  /* ─── DATA TABLE ─── */
+  #app table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    border-spacing: 0 !important;
+    font-size: 0.82rem !important;
+    border: none !important;
+  }
+
+  #app thead tr {
+    background: #1e2435 !important;
+  }
+
+  #app th {
+    padding: 10px 14px !important;
+    text-align: left !important;
+    font-size: 0.7rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.1em !important;
+    text-transform: uppercase !important;
+    color: #8892aa !important;
+    border: none !important;
+    border-bottom: 1px solid #2a3048 !important;
+    white-space: nowrap !important;
+    background: #1e2435 !important;
+    box-shadow: none !important;
+  }
+
+  #app td {
+    padding: 9px 14px !important;
+    border: none !important;
+    border-bottom: 1px solid #2a3048 !important;
+    vertical-align: middle !important;
+    color: #e8ecf4 !important;
+    background: #181c27 !important;
+    box-shadow: none !important;
+  }
+
+  /* はてなブログの tr 偶数行・奇数行 上書き */
+  #app tbody tr,
+  #app tbody tr:nth-child(odd) {
+    background: #181c27 !important;
+  }
+
+  #app tbody tr:nth-child(even) {
+    background: #1e2435 !important;
+  }
+
+  #app tbody tr:nth-child(even) td {
+    background: #1e2435 !important;
+  }
+
+  #app tbody tr:nth-child(odd) td {
+    background: #181c27 !important;
+  }
+
+  #app tr:hover td {
+    background: rgba(79, 142, 247, 0.08) !important;
+  }
+
+  .row-hidden { display: none; }
+
+  /* ─── RANK BADGE ─── */
+  .rank-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px; height: 26px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.82rem;
+    font-family: 'DM Mono', monospace;
+    flex-shrink: 0;
+  }
+
+  .rank-A { background: rgba(255,107,107,0.18); color: var(--rank-A); }
+  .rank-B { background: rgba(255,159,67,0.18); color: var(--rank-B); }
+  .rank-C { background: rgba(249,202,36,0.18); color: var(--rank-C); }
+  .rank-D { background: rgba(106,176,76,0.18); color: var(--rank-D); }
+  .rank-E { background: rgba(116,185,255,0.18); color: var(--rank-E); }
+
+  /* ─── PROGRESS BAR ─── */
+  .bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .bar-bg {
+    flex: 1;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+    min-width: 80px;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.4s ease;
+  }
+
+  .bar-pct {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.82rem;
+    font-weight: 500;
+    min-width: 34px;
+    text-align: right;
+  }
+
+  /* type badges */
+  .type-badge {
+    display: inline-block;
+    font-size: 0.68rem;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+
+  .type-単独 { background: rgba(79,142,247,0.15); color: #7ab4ff; border: 1px solid rgba(79,142,247,0.3); }
+  .type-併用 { background: rgba(229,107,111,0.15); color: #f09294; border: 1px solid rgba(229,107,111,0.3); }
+
+  /* ─── EMPTY STATE ─── */
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-sub);
+    display: none;
+  }
+
+  .empty-state.show { display: block; }
+
+  /* ─── CARD LAYOUT (mobile) ─── */
+  .card-list { display: none; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .card-title {
+    flex: 1;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.4;
+  }
+
+  .card-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 12px;
+    font-size: 0.78rem;
+  }
+
+  .card-row {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .card-key {
+    font-size: 0.65rem;
+    color: var(--text-sub);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .card-val {
+    color: var(--text);
+  }
+
+  .card-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .card-bar-bg {
+    flex: 1;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .card-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 700px) {
+    /* header: スクロールで隠れるようにして画面節約 */
+    header {
+      padding: 16px 16px 12px;
+      position: static;
+    }
+    header h1 { font-size: 1rem; }
+    header p.subtitle { font-size: 0.7rem; }
+
+    .controls {
+      padding: 16px 12px 0;
+      gap: 16px;
+    }
+    .legend, .stats-bar, .table-wrap { padding: 0 12px; }
+
+    /* フィルターボタンをタップしやすいサイズに */
+    .filter-btn {
+      padding: 8px 14px;
+      font-size: 0.84rem;
+      min-height: 38px;
+    }
+    .btn-row { gap: 8px; }
+
+    /* テーブル → カード切り替え */
+    .table-list { display: none; }
+    .card-list  { display: block; }
+
+    /* 大学見出し */
+    .univ-name { font-size: 1rem; }
+    .univ-section { margin-bottom: 28px; }
+
+    /* legend 横並び小さく */
+    .legend { flex-wrap: wrap; gap: 8px 14px; margin-top: 14px; }
+    .legend-item { font-size: 0.72rem; }
+  }
+
+  @media (max-width: 400px) {
+    header h1 { font-size: 0.92rem; }
+    .filter-btn { font-size: 0.8rem; padding: 7px 10px; }
+    .card-body { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+
+<header>
+  <div class="header-inner">
+    <h1>MARCH以上 <span>共通テスト利用</span> 合格基準ガイド</h1>
+    <p class="subtitle">学習院・明治・青山学院・立教・中央・法政大学 ／ 2025年度入試 河合塾データ参照</p>
+  </div>
+</header>
+
+<div class="controls">
+
+  <div class="control-group">
+    <div class="control-label">難易度ランク</div>
+    <div class="btn-row">
+      <button class="filter-btn rank-btn active" data-rank="ALL">すべて</button>
+      <button class="filter-btn rank-btn" data-rank="A">A（90%〜）</button>
+      <button class="filter-btn rank-btn" data-rank="B">B（85〜89%）</button>
+      <button class="filter-btn rank-btn" data-rank="C">C（80〜84%）</button>
+      <button class="filter-btn rank-btn" data-rank="D">D（75〜79%）</button>
+      <button class="filter-btn rank-btn" data-rank="E">E（〜74%）</button>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <div class="control-label">利用方式</div>
+    <div class="btn-row">
+      <button class="filter-btn type-btn active" data-type="ALL">すべて</button>
+      <button class="filter-btn type-btn" data-type="単独">単独型のみ</button>
+      <button class="filter-btn type-btn" data-type="併用">併用型のみ</button>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <div class="control-label">大学</div>
+    <div class="btn-row" id="univ-btns">
+      <button class="filter-btn univ-btn active" data-univ="ALL">すべて</button>
+      <button class="filter-btn univ-btn" data-univ="早稲田">早稲田</button>
+      <button class="filter-btn univ-btn" data-univ="上智">上智</button>
+      <button class="filter-btn univ-btn" data-univ="東京理科">東京理科</button>
+      <button class="filter-btn univ-btn" data-univ="学習院">学習院</button>
+      <button class="filter-btn univ-btn" data-univ="明治">明治</button>
+      <button class="filter-btn univ-btn" data-univ="青山学院">青山学院</button>
+      <button class="filter-btn univ-btn" data-univ="立教">立教</button>
+      <button class="filter-btn univ-btn" data-univ="中央">中央</button>
+      <button class="filter-btn univ-btn" data-univ="法政">法政</button>
+    </div>
+  </div>
+
+  <div class="control-group" id="faculty-group">
+    <div class="control-label">学部</div>
+    <div class="btn-row" id="faculty-btns">
+      <button class="filter-btn faculty-btn active" data-faculty="ALL">すべて</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:var(--rank-A)"></div>A: 90%以上</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--rank-B)"></div>B: 85〜89%</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--rank-C)"></div>C: 80〜84%</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--rank-D)"></div>D: 75〜79%</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--rank-E)"></div>E: 74%以下</div>
+</div>
+
+<div class="stats-bar">
+  表示中: <span id="visible-count">0</span> 件 / 全 <span id="total-count">0</span> 件
+</div>
+
+<div class="table-wrap" id="table-wrap"></div>
+<div class="empty-state" id="empty-state">条件に合うデータが見つかりませんでした。</div>
+
+<script>
+// ─── DATA ───────────────────────────────────────────────────
+// rank: A=90+, B=85-89, C=80-84, D=75-79, E=74以下
+// type: 単独 or 併用
+const DATA = [
+  // ── 学習院大学 ──
+  {univ:"学習院", faculty:"文学部", dept:"哲学科", mode:"3教科型", type:"単独", pct:81},
+  {univ:"学習院", faculty:"文学部", dept:"史学科", mode:"3教科型", type:"単独", pct:81},
+  {univ:"学習院", faculty:"文学部", dept:"日本語日本文学科", mode:"3教科型", type:"単独", pct:79},
+  {univ:"学習院", faculty:"文学部", dept:"英語英米文化学科", mode:"3教科型", type:"単独", pct:79},
+  {univ:"学習院", faculty:"文学部", dept:"ドイツ語圏文化学科", mode:"3教科型", type:"単独", pct:77},
+  {univ:"学習院", faculty:"文学部", dept:"フランス語圏文化学科", mode:"3教科型", type:"単独", pct:81},
+  {univ:"学習院", faculty:"文学部", dept:"心理学科", mode:"3教科型", type:"単独", pct:79},
+  {univ:"学習院", faculty:"文学部", dept:"教育学科", mode:"3教科型", type:"単独", pct:78},
+  {univ:"学習院", faculty:"国際社会科学部", dept:"国際社会科学科", mode:"3教科型", type:"単独", pct:75},
+  {univ:"学習院", faculty:"法学部", dept:"法学科", mode:"3教科型", type:"単独", pct:81},
+  {univ:"学習院", faculty:"法学部", dept:"政治学科", mode:"3教科型", type:"単独", pct:81},
+  {univ:"学習院", faculty:"経済学部", dept:"経済学科", mode:"3教科型", type:"単独", pct:77},
+  {univ:"学習院", faculty:"経済学部", dept:"経営学科", mode:"3教科型", type:"単独", pct:75},
+  {univ:"学習院", faculty:"理学部", dept:"物理学科", mode:"3教科型", type:"単独", pct:72},
+  {univ:"学習院", faculty:"理学部", dept:"化学科", mode:"3教科型", type:"単独", pct:72},
+  {univ:"学習院", faculty:"理学部", dept:"数学科", mode:"3教科型", type:"単独", pct:72},
+  {univ:"学習院", faculty:"理学部", dept:"生命科学科", mode:"3教科型", type:"単独", pct:72},
+
+  // ── 明治大学 ──
+  {univ:"明治", faculty:"文学部", dept:"日本文学科", mode:"前期3科目", type:"単独", pct:85},
+  {univ:"明治", faculty:"文学部", dept:"日本文学科", mode:"前期5科目", type:"単独", pct:84},
+  {univ:"明治", faculty:"文学部", dept:"英米文学科", mode:"前期3科目", type:"単独", pct:82},
+  {univ:"明治", faculty:"文学部", dept:"英米文学科", mode:"前期5科目", type:"単独", pct:81},
+  {univ:"明治", faculty:"文学部", dept:"ドイツ文学科", mode:"前期3科目", type:"単独", pct:84},
+  {univ:"明治", faculty:"文学部", dept:"フランス文学科", mode:"前期3科目", type:"単独", pct:79},
+  {univ:"明治", faculty:"文学部", dept:"演劇学科", mode:"前期3科目", type:"単独", pct:84},
+  {univ:"明治", faculty:"文学部", dept:"史学-日本史学科", mode:"前期3科目", type:"単独", pct:85},
+  {univ:"明治", faculty:"文学部", dept:"史学-アジア史学科", mode:"前期3科目", type:"単独", pct:85},
+  {univ:"明治", faculty:"文学部", dept:"史学-西洋史学科", mode:"前期3科目", type:"単独", pct:85},
+  {univ:"明治", faculty:"文学部", dept:"史学-考古学科", mode:"前期3科目", type:"単独", pct:84},
+  {univ:"明治", faculty:"文学部", dept:"史学-地理学科", mode:"前期3科目", type:"単独", pct:82},
+  {univ:"明治", faculty:"国際日本学部", dept:"国際日本学科", mode:"前期3科目", type:"単独", pct:84},
+  {univ:"明治", faculty:"国際日本学部", dept:"国際日本学科", mode:"前期5科目", type:"単独", pct:80},
+  {univ:"明治", faculty:"法学部", dept:"法律学科", mode:"前期3科目", type:"単独", pct:81},
+  {univ:"明治", faculty:"法学部", dept:"法律学科", mode:"前期4科目", type:"単独", pct:80},
+  {univ:"明治", faculty:"法学部", dept:"法律学科", mode:"前期5科目", type:"単独", pct:76},
+  {univ:"明治", faculty:"政治経済学部", dept:"政治学科", mode:"前期3科目", type:"単独", pct:85},
+  {univ:"明治", faculty:"政治経済学部", dept:"政治学科", mode:"前期7科目", type:"単独", pct:78},
+  {univ:"明治", faculty:"政治経済学部", dept:"経済学科", mode:"前期3科目", type:"単独", pct:85},
+  {univ:"明治", faculty:"政治経済学部", dept:"地域行政学科", mode:"前期7科目", type:"単独", pct:80},
+  {univ:"明治", faculty:"経営学部", dept:"経営学科", mode:"前期3科目", type:"単独", pct:82},
+  {univ:"明治", faculty:"経営学部", dept:"経営学科", mode:"前期4科目", type:"単独", pct:81},
+  {univ:"明治", faculty:"商学部", dept:"商学科", mode:"前期4科目", type:"単独", pct:80},
+  {univ:"明治", faculty:"商学部", dept:"商学科", mode:"前期5科目", type:"単独", pct:79},
+  {univ:"明治", faculty:"情報コミュニケーション学部", dept:"情報コミュニケーション学科", mode:"前期3科目", type:"単独", pct:83},
+  {univ:"明治", faculty:"情報コミュニケーション学部", dept:"情報コミュニケーション学科", mode:"前期6科目", type:"単独", pct:77},
+  {univ:"明治", faculty:"理工学部", dept:"物理学科", mode:"前期4教科", type:"単独", pct:83},
+  {univ:"明治", faculty:"理工学部", dept:"機械工学科", mode:"前期3教科", type:"単独", pct:81},
+  {univ:"明治", faculty:"理工学部", dept:"応用化学科", mode:"前期4教科", type:"単独", pct:81},
+  {univ:"明治", faculty:"理工学部", dept:"建築学科", mode:"前期4教科", type:"単独", pct:81},
+  {univ:"明治", faculty:"理工学部", dept:"情報科学科", mode:"前期3教科", type:"単独", pct:81},
+  {univ:"明治", faculty:"理工学部", dept:"電気電子工学科", mode:"前期3教科", type:"単独", pct:76},
+  {univ:"明治", faculty:"農学部", dept:"農学科", mode:"前期", type:"単独", pct:77},
+  {univ:"明治", faculty:"農学部", dept:"農芸化学科", mode:"前期", type:"単独", pct:77},
+  {univ:"明治", faculty:"農学部", dept:"生命科学科", mode:"前期", type:"単独", pct:76},
+  {univ:"明治", faculty:"農学部", dept:"食料環境政策学科", mode:"前期", type:"単独", pct:78},
+  {univ:"明治", faculty:"総合数理学部", dept:"現象数理学科", mode:"前期", type:"単独", pct:81},
+  {univ:"明治", faculty:"総合数理学部", dept:"先端メディアサイエンス学科", mode:"前期", type:"単独", pct:82},
+  {univ:"明治", faculty:"総合数理学部", dept:"ネットワークデザイン学科", mode:"前期", type:"単独", pct:78},
+
+  // ── 青山学院大学 ──
+  {univ:"青山学院", faculty:"文学部", dept:"英米文学科", mode:"共テ単独", type:"単独", pct:82},
+  {univ:"青山学院", faculty:"文学部", dept:"英米文学科", mode:"個別学部A方式", type:"併用", pct:76},
+  {univ:"青山学院", faculty:"文学部", dept:"フランス文学科", mode:"共テ単独", type:"単独", pct:82},
+  {univ:"青山学院", faculty:"文学部", dept:"フランス文学科", mode:"個別学部A方式", type:"併用", pct:76},
+  {univ:"青山学院", faculty:"文学部", dept:"フランス文学科", mode:"個別学部B方式", type:"併用", pct:79},
+  {univ:"青山学院", faculty:"文学部", dept:"日本文学科", mode:"共テ単独", type:"単独", pct:84},
+  {univ:"青山学院", faculty:"文学部", dept:"日本文学科", mode:"個別学部A方式", type:"併用", pct:78},
+  {univ:"青山学院", faculty:"文学部", dept:"史学科・3科目型", mode:"共テ単独", type:"単独", pct:83},
+  {univ:"青山学院", faculty:"文学部", dept:"史学科・6科目型", mode:"共テ単独", type:"単独", pct:82},
+  {univ:"青山学院", faculty:"文学部", dept:"史学科", mode:"個別学部日程", type:"併用", pct:78},
+  {univ:"青山学院", faculty:"文学部", dept:"比較芸術学科", mode:"共テ単独", type:"単独", pct:85},
+  {univ:"青山学院", faculty:"文学部", dept:"比較芸術学科", mode:"個別学部日程", type:"併用", pct:79},
+  {univ:"青山学院", faculty:"教育人間科学部", dept:"教育学科", mode:"共テ単独", type:"単独", pct:83},
+  {univ:"青山学院", faculty:"教育人間科学部", dept:"教育学科", mode:"個別学部日程", type:"併用", pct:80},
+  {univ:"青山学院", faculty:"教育人間科学部", dept:"心理学科", mode:"共テ単独", type:"単独", pct:85},
+  {univ:"青山学院", faculty:"教育人間科学部", dept:"心理学科", mode:"個別学部日程", type:"併用", pct:81},
+  {univ:"青山学院", faculty:"総合文化政策学部", dept:"総合文化政策学科・3科目型", mode:"共テ単独", type:"単独", pct:86},
+  {univ:"青山学院", faculty:"総合文化政策学部", dept:"総合文化政策学科・4科目型", mode:"共テ単独", type:"単独", pct:87},
+  {univ:"青山学院", faculty:"地域社会共生学部", dept:"地域社会共生学科", mode:"共テ単独", type:"単独", pct:82},
+  {univ:"青山学院", faculty:"国際政治経済学部", dept:"国際政治学科", mode:"共テ単独", type:"単独", pct:89},
+  {univ:"青山学院", faculty:"国際政治経済学部", dept:"国際経済学科", mode:"共テ単独", type:"単独", pct:88},
+  {univ:"青山学院", faculty:"国際政治経済学部", dept:"国際コミュニケーション学科", mode:"共テ単独", type:"単独", pct:77},
+  {univ:"青山学院", faculty:"法学部", dept:"法学科", mode:"共テ単独", type:"単独", pct:84},
+  {univ:"青山学院", faculty:"法学部", dept:"法学科", mode:"個別学部日程", type:"併用", pct:73},
+  {univ:"青山学院", faculty:"経済学部", dept:"経済学科", mode:"共テ単独", type:"単独", pct:80},
+  {univ:"青山学院", faculty:"経済学部", dept:"現代経済デザイン学科", mode:"4科目型", type:"単独", pct:87},
+  {univ:"青山学院", faculty:"経営学部", dept:"経営学科", mode:"共テ単独", type:"単独", pct:83},
+  {univ:"青山学院", faculty:"経営学部", dept:"経営学科", mode:"個別学部B方式", type:"併用", pct:68},
+  {univ:"青山学院", faculty:"経営学部", dept:"マーケティング学科", mode:"共テ単独", type:"単独", pct:79},
+  {univ:"青山学院", faculty:"社会情報学部", dept:"社会情報学科・3科目型", mode:"共テ単独", type:"単独", pct:87},
+  {univ:"青山学院", faculty:"社会情報学部", dept:"社会情報学科・5科目型", mode:"共テ単独", type:"単独", pct:69},
+  {univ:"青山学院", faculty:"理工学部", dept:"物理・数理学科", mode:"共テ単独", type:"単独", pct:80},
+  {univ:"青山学院", faculty:"理工学部", dept:"物理・数理学科", mode:"個別学部B方式", type:"併用", pct:68},
+  {univ:"青山学院", faculty:"理工学部", dept:"化学・生命科学科", mode:"共テ単独", type:"単独", pct:74},
+  {univ:"青山学院", faculty:"コミュニティ人間科学部", dept:"コミュニティ人間科学科", mode:"共テ単独", type:"単独", pct:81},
+
+  // ── 立教大学 ──
+  {univ:"立教", faculty:"文学部", dept:"キリスト教学科・3科目型", mode:"共テ単独", type:"単独", pct:80},
+  {univ:"立教", faculty:"文学部", dept:"文学科日本文学専修・3科目型", mode:"共テ単独", type:"単独", pct:83},
+  {univ:"立教", faculty:"文学部", dept:"文学科英米文学専修・3科目型", mode:"共テ単独", type:"単独", pct:86},
+  {univ:"立教", faculty:"文学部", dept:"文学科ドイツ文学専修・3科目型", mode:"共テ単独", type:"単独", pct:81},
+  {univ:"立教", faculty:"文学部", dept:"文学科フランス文学専修・3科目型", mode:"共テ単独", type:"単独", pct:83},
+  {univ:"立教", faculty:"文学部", dept:"史学科・3科目型", mode:"共テ単独", type:"単独", pct:85},
+  {univ:"立教", faculty:"文学部", dept:"教育学科・3科目型", mode:"共テ単独", type:"単独", pct:82},
+  {univ:"立教", faculty:"異文化コミュニケーション学部", dept:"異文化コミュニケーション学科・3科目型", mode:"共テ単独", type:"単独", pct:90},
+  {univ:"立教", faculty:"異文化コミュニケーション学部", dept:"異文化コミュニケーション学科・6科目型", mode:"共テ単独", type:"単独", pct:82},
+  {univ:"立教", faculty:"社会学部", dept:"社会学科・3科目型", mode:"共テ単独", type:"単独", pct:86},
+  {univ:"立教", faculty:"社会学部", dept:"現代文化学科・3科目型", mode:"共テ単独", type:"単独", pct:85},
+  {univ:"立教", faculty:"社会学部", dept:"メディア社会学科・3科目型", mode:"共テ単独", type:"単独", pct:88},
+  {univ:"立教", faculty:"社会学部", dept:"社会学科・6科目型", mode:"共テ単独", type:"単独", pct:71},
+  {univ:"立教", faculty:"観光学部", dept:"観光学科・3科目型", mode:"共テ単独", type:"単独", pct:85},
+  {univ:"立教", faculty:"観光学部", dept:"交流文化学科・3科目型", mode:"共テ単独", type:"単独", pct:83},
+  {univ:"立教", faculty:"コミュニティ福祉学部", dept:"福祉学科・3科目型", mode:"共テ単独", type:"単独", pct:73},
+  {univ:"立教", faculty:"コミュニティ福祉学部", dept:"コミュニティ政策学科・3科目型", mode:"共テ単独", type:"単独", pct:78},
+  {univ:"立教", faculty:"コミュニティ福祉学部", dept:"スポーツウエルネス学科・3科目型", mode:"共テ単独", type:"単独", pct:75},
+  {univ:"立教", faculty:"法学部", dept:"法学科・3科目型", mode:"共テ単独", type:"単独", pct:85},
+  {univ:"立教", faculty:"法学部", dept:"国際ビジネス法学科・3科目型", mode:"共テ単独", type:"単独", pct:83},
+  {univ:"立教", faculty:"法学部", dept:"政治学科・3科目型", mode:"共テ単独", type:"単独", pct:84},
+  {univ:"立教", faculty:"経済学部", dept:"経済学科・3科目型", mode:"共テ単独", type:"単独", pct:84},
+  {univ:"立教", faculty:"経済学部", dept:"経済政策学科・3科目型", mode:"共テ単独", type:"単独", pct:83},
+  {univ:"立教", faculty:"経済学部", dept:"会計ファイナンス学科・3科目型", mode:"共テ単独", type:"単独", pct:82},
+  {univ:"立教", faculty:"経営学部", dept:"経営学科・3科目型", mode:"共テ単独", type:"単独", pct:90},
+  {univ:"立教", faculty:"経営学部", dept:"国際経営学科・3科目型", mode:"共テ単独", type:"単独", pct:90},
+  {univ:"立教", faculty:"経営学部", dept:"経営学科・6科目型", mode:"共テ単独", type:"単独", pct:78},
+  {univ:"立教", faculty:"現代心理学部", dept:"心理学科・3科目型", mode:"共テ単独", type:"単独", pct:85},
+  {univ:"立教", faculty:"現代心理学部", dept:"映像身体学科・3科目型", mode:"共テ単独", type:"単独", pct:74},
+  {univ:"立教", faculty:"理学部", dept:"数学科・3科目型", mode:"共テ単独", type:"単独", pct:74},
+  {univ:"立教", faculty:"理学部", dept:"物理学科・6科目型", mode:"共テ単独", type:"単独", pct:68},
+  {univ:"立教", faculty:"理学部", dept:"化学科・6科目型", mode:"共テ単独", type:"単独", pct:73},
+  {univ:"立教", faculty:"理学部", dept:"生命理学科・6科目型", mode:"共テ単独", type:"単独", pct:68},
+
+  // ── 中央大学 ──
+  {univ:"中央", faculty:"法学部", dept:"法律学科・3教科型", mode:"共テ単独", type:"単独", pct:85},
+  {univ:"中央", faculty:"法学部", dept:"法律学科・5教科型", mode:"共テ単独", type:"単独", pct:87},
+  {univ:"中央", faculty:"法学部", dept:"法律学科", mode:"共テ併用", type:"併用", pct:74},
+  {univ:"中央", faculty:"法学部", dept:"国際企業関係法学科・3教科型", mode:"共テ単独", type:"単独", pct:82},
+  {univ:"中央", faculty:"法学部", dept:"政治学科・3教科型", mode:"共テ単独", type:"単独", pct:82},
+  {univ:"中央", faculty:"経済学部", dept:"経済学科・3教科型", mode:"共テ単独", type:"単独", pct:82},
+  {univ:"中央", faculty:"経済学部", dept:"経済学科・5教科型", mode:"共テ単独", type:"単独", pct:76},
+  {univ:"中央", faculty:"経済学部", dept:"経済情報システム学科", mode:"共テ単独", type:"単独", pct:78},
+  {univ:"中央", faculty:"経済学部", dept:"国際経済学科・3教科型", mode:"共テ単独", type:"単独", pct:80},
+  {univ:"中央", faculty:"経済学部", dept:"公共・環境経済学科", mode:"共テ単独", type:"単独", pct:71},
+  {univ:"中央", faculty:"商学部", dept:"経営学科", mode:"共テ単独", type:"単独", pct:78},
+  {univ:"中央", faculty:"商学部", dept:"会計学科", mode:"共テ単独", type:"単独", pct:78},
+  {univ:"中央", faculty:"商学部", dept:"国際マーケティング学科", mode:"共テ単独", type:"単独", pct:79},
+  {univ:"中央", faculty:"商学部", dept:"フリーメジャー（学科自由選択）", mode:"共テ併用", type:"併用", pct:67},
+  {univ:"中央", faculty:"文学部", dept:"国文学科・3教科型", mode:"共テ単独", type:"単独", pct:81},
+  {univ:"中央", faculty:"文学部", dept:"英語文学文化学科・3教科型", mode:"共テ単独", type:"単独", pct:80},
+  {univ:"中央", faculty:"文学部", dept:"哲学科・3教科型", mode:"共テ単独", type:"単独", pct:77},
+  {univ:"中央", faculty:"文学部", dept:"史学科・3教科型", mode:"共テ単独", type:"単独", pct:80},
+  {univ:"中央", faculty:"文学部", dept:"社会学科・3教科型", mode:"共テ単独", type:"単独", pct:79},
+  {univ:"中央", faculty:"国際経営学部", dept:"国際経営学科・3教科型", mode:"共テ単独", type:"単独", pct:83},
+  {univ:"中央", faculty:"国際経営学部", dept:"国際経営学科・5教科型", mode:"共テ単独", type:"単独", pct:76},
+  {univ:"中央", faculty:"国際情報学部", dept:"国際情報学科・3教科型", mode:"共テ単独", type:"単独", pct:80},
+  {univ:"中央", faculty:"国際情報学部", dept:"国際情報学科・5教科型", mode:"共テ単独", type:"単独", pct:76},
+  {univ:"中央", faculty:"総合政策学部", dept:"政策科学科・3教科型", mode:"共テ単独", type:"単独", pct:80},
+  {univ:"中央", faculty:"総合政策学部", dept:"国際政策文化学科・3教科型", mode:"共テ単独", type:"単独", pct:77},
+  {univ:"中央", faculty:"理工学部", dept:"数学科・4教科型", mode:"共テ単独", type:"単独", pct:81},
+  {univ:"中央", faculty:"理工学部", dept:"物理学科・4教科型", mode:"共テ単独", type:"単独", pct:75},
+  {univ:"中央", faculty:"理工学部", dept:"都市環境学科・4教科型", mode:"共テ単独", type:"単独", pct:71},
+  {univ:"中央", faculty:"理工学部", dept:"精密機械工学科・4教科型", mode:"共テ単独", type:"単独", pct:74},
+  {univ:"中央", faculty:"理工学部", dept:"電気電子情報通信工学科・4教科型", mode:"共テ単独", type:"単独", pct:71},
+  {univ:"中央", faculty:"理工学部", dept:"応用化学科・4教科型", mode:"共テ単独", type:"単独", pct:73},
+  {univ:"中央", faculty:"理工学部", dept:"情報工学科・4教科型", mode:"共テ単独", type:"単独", pct:75},
+
+  // ── 法政大学 ──
+  {univ:"法政", faculty:"法学部", dept:"法律学科・A方式", mode:"共テ単独", type:"単独", pct:82},
+  {univ:"法政", faculty:"法学部", dept:"法律学科・B方式", mode:"共テ単独", type:"単独", pct:83},
+  {univ:"法政", faculty:"法学部", dept:"国際政治学科・A方式", mode:"共テ単独", type:"単独", pct:83},
+  {univ:"法政", faculty:"法学部", dept:"国際政治学科・B方式", mode:"共テ単独", type:"単独", pct:86},
+  {univ:"法政", faculty:"法学部", dept:"政治学科・A方式", mode:"共テ単独", type:"単独", pct:83},
+  {univ:"法政", faculty:"文学部", dept:"哲学科", mode:"共テ単独", type:"単独", pct:80},
+  {univ:"法政", faculty:"文学部", dept:"日本文学科・A方式", mode:"共テ単独", type:"単独", pct:82},
+  {univ:"法政", faculty:"文学部", dept:"英文学科", mode:"共テ単独", type:"単独", pct:82},
+  {univ:"法政", faculty:"文学部", dept:"史学科", mode:"共テ単独", type:"単独", pct:84},
+  {univ:"法政", faculty:"文学部", dept:"地理学科・A方式", mode:"共テ単独", type:"単独", pct:79},
+  {univ:"法政", faculty:"経済学部", dept:"経済学科・A方式", mode:"共テ単独", type:"単独", pct:79},
+  {univ:"法政", faculty:"経済学部", dept:"国際経済学科・A方式", mode:"共テ単独", type:"単独", pct:79},
+  {univ:"法政", faculty:"経済学部", dept:"現代ビジネス学科・A方式", mode:"共テ単独", type:"単独", pct:77},
+  {univ:"法政", faculty:"社会学部", dept:"社会学科・A方式", mode:"共テ単独", type:"単独", pct:78},
+  {univ:"法政", faculty:"社会学部", dept:"社会政策科学科・A方式", mode:"共テ単独", type:"単独", pct:78},
+  {univ:"法政", faculty:"社会学部", dept:"メディア社会学科・A方式", mode:"共テ単独", type:"単独", pct:80},
+  {univ:"法政", faculty:"経営学部", dept:"経営学科・A方式", mode:"共テ単独", type:"単独", pct:81},
+  {univ:"法政", faculty:"経営学部", dept:"経営戦略学科・A方式", mode:"共テ単独", type:"単独", pct:80},
+  {univ:"法政", faculty:"経営学部", dept:"市場経営学科・A方式", mode:"共テ単独", type:"単独", pct:80},
+  {univ:"法政", faculty:"国際文化学部", dept:"国際文化学科・A方式", mode:"共テ単独", type:"単独", pct:80},
+  {univ:"法政", faculty:"人間環境学部", dept:"人間環境学科・A方式", mode:"共テ単独", type:"単独", pct:78},
+  {univ:"法政", faculty:"現代福祉学部", dept:"福祉コミュニティ学科・A方式", mode:"共テ単独", type:"単独", pct:74},
+  {univ:"法政", faculty:"現代福祉学部", dept:"臨床心理学科・A方式", mode:"共テ単独", type:"単独", pct:77},
+  {univ:"法政", faculty:"スポーツ健康学部", dept:"スポーツ健康学科・A方式", mode:"共テ単独", type:"単独", pct:73},
+  {univ:"法政", faculty:"情報科学部", dept:"コンピュータ科学科・A方式", mode:"共テ単独", type:"単独", pct:73},
+  {univ:"法政", faculty:"理工学部", dept:"機械工学科・A方式", mode:"共テ単独", type:"単独", pct:68},
+  {univ:"法政", faculty:"理工学部", dept:"電気電子工学科・A方式", mode:"共テ単独", type:"単独", pct:69},
+  {univ:"法政", faculty:"理工学部", dept:"応用情報工学科・A方式", mode:"共テ単独", type:"単独", pct:71},
+  {univ:"法政", faculty:"理工学部", dept:"経営システム工学科・A方式", mode:"共テ単独", type:"単独", pct:71},
+  {univ:"法政", faculty:"生命科学部", dept:"生命機能学科・A方式", mode:"共テ単独", type:"単独", pct:70},
+  {univ:"法政", faculty:"生命科学部", dept:"環境応用化学科・A方式", mode:"共テ単独", type:"単独", pct:69},
+  {univ:"法政", faculty:"デザイン工学部", dept:"建築学科・A方式", mode:"共テ単独", type:"単独", pct:74},
+  {univ:"法政", faculty:"デザイン工学部", dept:"都市環境デザイン工学科・A方式", mode:"共テ単独", type:"単独", pct:73},
+  {univ:"法政", faculty:"グローバル教養学部", dept:"グローバル教養学科・A方式", mode:"共テ単独", type:"単独", pct:83},
+  {univ:"法政", faculty:"キャリアデザイン学部", dept:"キャリアデザイン学科・A方式", mode:"共テ単独", type:"単独", pct:77},
+
+  // ── 早稲田大学 ──
+  // ※商学部・基幹理工・創造理工・先進理工は共テ利用なし（独自試験のみ）
+  // 政治経済学部：共テ単独 + 共テ併用（独自試験と組合せ）
+  {univ:"早稲田", faculty:"政治経済学部", dept:"政治学科", mode:"共テ単独", type:"単独", pct:88},
+  {univ:"早稲田", faculty:"政治経済学部", dept:"政治学科", mode:"併用方式", type:"併用", pct:85},
+  {univ:"早稲田", faculty:"政治経済学部", dept:"経済学科", mode:"共テ単独", type:"単独", pct:89},
+  {univ:"早稲田", faculty:"政治経済学部", dept:"経済学科", mode:"併用方式", type:"併用", pct:87},
+  {univ:"早稲田", faculty:"政治経済学部", dept:"国際政治経済学科", mode:"共テ単独", type:"単独", pct:88},
+  {univ:"早稲田", faculty:"政治経済学部", dept:"国際政治経済学科", mode:"併用方式", type:"併用", pct:85},
+  // 法学部：共テ単独のみ
+  {univ:"早稲田", faculty:"法学部", dept:"法学科", mode:"共テ単独", type:"単独", pct:89},
+  // 文化構想学部：共テ併用のみ（共テ1科目+独自2科目）
+  {univ:"早稲田", faculty:"文化構想学部", dept:"文化構想学科", mode:"併用方式（共テ1科目）", type:"併用", pct:94},
+  // 文学部：共テ併用のみ（共テ1科目+独自2科目）
+  {univ:"早稲田", faculty:"文学部", dept:"文学科", mode:"併用方式（共テ1科目）", type:"併用", pct:92},
+  // 教育学部：C方式（共テ併用）・D方式（共テ併用）
+  {univ:"早稲田", faculty:"教育学部", dept:"教育学科・教育学専攻", mode:"C方式（共テ併用）", type:"併用", pct:80},
+  {univ:"早稲田", faculty:"教育学部", dept:"教育学科・生涯教育学専攻", mode:"C方式（共テ併用）", type:"併用", pct:77},
+  {univ:"早稲田", faculty:"教育学部", dept:"教育学科・教育心理学専攻", mode:"C方式（共テ併用）", type:"併用", pct:81},
+  {univ:"早稲田", faculty:"教育学部", dept:"教育学科・初等教育学専攻", mode:"C方式（共テ併用）", type:"併用", pct:78},
+  {univ:"早稲田", faculty:"教育学部", dept:"国語国文学科", mode:"C方式（共テ併用）", type:"併用", pct:80},
+  {univ:"早稲田", faculty:"教育学部", dept:"英語英文学科", mode:"C方式（共テ併用）", type:"併用", pct:80},
+  {univ:"早稲田", faculty:"教育学部", dept:"社会科・地理歴史専修", mode:"C方式（共テ併用）", type:"併用", pct:81},
+  {univ:"早稲田", faculty:"教育学部", dept:"社会科・公共市民学専修", mode:"C方式（共テ併用）", type:"併用", pct:80},
+  {univ:"早稲田", faculty:"教育学部", dept:"理学科・生物学専修", mode:"C方式（共テ併用）", type:"併用", pct:81},
+  {univ:"早稲田", faculty:"教育学部", dept:"理学科・生物学専修", mode:"D方式（共テ併用）", type:"併用", pct:82},
+  {univ:"早稲田", faculty:"教育学部", dept:"理学科・地球科学専修", mode:"C方式（共テ併用）", type:"併用", pct:80},
+  {univ:"早稲田", faculty:"教育学部", dept:"数学科", mode:"C方式（共テ併用）", type:"併用", pct:80},
+  {univ:"早稲田", faculty:"教育学部", dept:"複合文化学科", mode:"C方式（共テ併用）", type:"併用", pct:82},
+  // 社会科学部：共テ単独 + 2つの併用方式（2025年度から新設）
+  {univ:"早稲田", faculty:"社会科学部", dept:"社会科学科", mode:"共テ単独", type:"単独", pct:88},
+  {univ:"早稲田", faculty:"社会科学部", dept:"社会科学科", mode:"併用・総合問題型", type:"併用", pct:85},
+  {univ:"早稲田", faculty:"社会科学部", dept:"社会科学科", mode:"併用・数学型", type:"併用", pct:86},
+  // 国際教養学部：共テ併用のみ
+  {univ:"早稲田", faculty:"国際教養学部", dept:"国際教養学科", mode:"併用方式", type:"併用", pct:84},
+  // 人間科学部：共テ単独 + 併用国英型 + 併用数英型 + 数学選抜方式（共テ併用）
+  {univ:"早稲田", faculty:"人間科学部", dept:"人間環境科学科", mode:"共テ単独", type:"単独", pct:85},
+  {univ:"早稲田", faculty:"人間科学部", dept:"人間環境科学科", mode:"併用・国英型", type:"併用", pct:85},
+  {univ:"早稲田", faculty:"人間科学部", dept:"人間環境科学科", mode:"併用・数英型", type:"併用", pct:83},
+  {univ:"早稲田", faculty:"人間科学部", dept:"人間環境科学科", mode:"数学選抜方式（共テ併用）", type:"併用", pct:78},
+  {univ:"早稲田", faculty:"人間科学部", dept:"健康福祉科学科", mode:"共テ単独", type:"単独", pct:84},
+  {univ:"早稲田", faculty:"人間科学部", dept:"健康福祉科学科", mode:"併用・国英型", type:"併用", pct:83},
+  {univ:"早稲田", faculty:"人間科学部", dept:"健康福祉科学科", mode:"併用・数英型", type:"併用", pct:80},
+  {univ:"早稲田", faculty:"人間科学部", dept:"健康福祉科学科", mode:"数学選抜方式（共テ併用）", type:"併用", pct:79},
+  {univ:"早稲田", faculty:"人間科学部", dept:"人間情報科学科", mode:"共テ単独", type:"単独", pct:86},
+  {univ:"早稲田", faculty:"人間科学部", dept:"人間情報科学科", mode:"併用・国英型", type:"併用", pct:86},
+  {univ:"早稲田", faculty:"人間科学部", dept:"人間情報科学科", mode:"併用・数英型", type:"併用", pct:81},
+  {univ:"早稲田", faculty:"人間科学部", dept:"人間情報科学科", mode:"数学選抜方式（共テ併用）", type:"併用", pct:79},
+  // スポーツ科学部：共テ単独（2科目）+ 共テ併用（共テ2科目+総合問題）
+  {univ:"早稲田", faculty:"スポーツ科学部", dept:"スポーツ科学科", mode:"共テ単独（A方式）", type:"単独", pct:74},
+  {univ:"早稲田", faculty:"スポーツ科学部", dept:"スポーツ科学科", mode:"併用方式（B方式）", type:"併用", pct:86},
+
+  // ── 上智大学 ──
+  // 上智：「3教科型（共テ単独）」「4教科型（共テ単独）」「学部学科試験・共テ併用型」の3方式
+  // 神学部
+  {univ:"上智", faculty:"神学部", dept:"神学科", mode:"3教科型（共テ単独）", type:"単独", pct:84},
+  {univ:"上智", faculty:"神学部", dept:"神学科", mode:"4教科型（共テ単独）", type:"単独", pct:75},
+  {univ:"上智", faculty:"神学部", dept:"神学科", mode:"学科試験・共テ併用", type:"併用", pct:75},
+  // 文学部
+  {univ:"上智", faculty:"文学部", dept:"哲学科", mode:"3教科型（共テ単独）", type:"単独", pct:87},
+  {univ:"上智", faculty:"文学部", dept:"哲学科", mode:"4教科型（共テ単独）", type:"単独", pct:83},
+  {univ:"上智", faculty:"文学部", dept:"哲学科", mode:"学科試験・共テ併用", type:"併用", pct:85},
+  {univ:"上智", faculty:"文学部", dept:"史学科", mode:"3教科型（共テ単独）", type:"単独", pct:86},
+  {univ:"上智", faculty:"文学部", dept:"史学科", mode:"4教科型（共テ単独）", type:"単独", pct:82},
+  {univ:"上智", faculty:"文学部", dept:"史学科", mode:"学科試験・共テ併用", type:"併用", pct:82},
+  {univ:"上智", faculty:"文学部", dept:"国文学科", mode:"3教科型（共テ単独）", type:"単独", pct:87},
+  {univ:"上智", faculty:"文学部", dept:"国文学科", mode:"4教科型（共テ単独）", type:"単独", pct:84},
+  {univ:"上智", faculty:"文学部", dept:"国文学科", mode:"学科試験・共テ併用", type:"併用", pct:85},
+  {univ:"上智", faculty:"文学部", dept:"英文学科", mode:"3教科型（共テ単独）", type:"単独", pct:88},
+  {univ:"上智", faculty:"文学部", dept:"英文学科", mode:"4教科型（共テ単独）", type:"単独", pct:84},
+  {univ:"上智", faculty:"文学部", dept:"英文学科", mode:"学科試験・共テ併用", type:"併用", pct:82},
+  {univ:"上智", faculty:"文学部", dept:"ドイツ文学科", mode:"3教科型（共テ単独）", type:"単独", pct:87},
+  {univ:"上智", faculty:"文学部", dept:"ドイツ文学科", mode:"4教科型（共テ単独）", type:"単独", pct:81},
+  {univ:"上智", faculty:"文学部", dept:"ドイツ文学科", mode:"学科試験・共テ併用", type:"併用", pct:84},
+  {univ:"上智", faculty:"文学部", dept:"フランス文学科", mode:"3教科型（共テ単独）", type:"単独", pct:87},
+  {univ:"上智", faculty:"文学部", dept:"フランス文学科", mode:"4教科型（共テ単独）", type:"単独", pct:81},
+  {univ:"上智", faculty:"文学部", dept:"フランス文学科", mode:"学科試験・共テ併用", type:"併用", pct:84},
+  {univ:"上智", faculty:"文学部", dept:"新聞学科", mode:"3教科型（共テ単独）", type:"単独", pct:87},
+  {univ:"上智", faculty:"文学部", dept:"新聞学科", mode:"4教科型（共テ単独）", type:"単独", pct:82},
+  {univ:"上智", faculty:"文学部", dept:"新聞学科", mode:"学科試験・共テ併用", type:"併用", pct:82},
+  // 総合人間科学部
+  {univ:"上智", faculty:"総合人間科学部", dept:"教育学科", mode:"3教科型（共テ単独）", type:"単独", pct:87},
+  {univ:"上智", faculty:"総合人間科学部", dept:"教育学科", mode:"4教科型（共テ単独）", type:"単独", pct:84},
+  {univ:"上智", faculty:"総合人間科学部", dept:"教育学科", mode:"学科試験・共テ併用", type:"併用", pct:85},
+  {univ:"上智", faculty:"総合人間科学部", dept:"心理学科", mode:"3教科型（共テ単独）", type:"単独", pct:85},
+  {univ:"上智", faculty:"総合人間科学部", dept:"心理学科", mode:"4教科型（共テ単独）", type:"単独", pct:84},
+  {univ:"上智", faculty:"総合人間科学部", dept:"心理学科", mode:"学科試験・共テ併用", type:"併用", pct:84},
+  {univ:"上智", faculty:"総合人間科学部", dept:"社会学科", mode:"3教科型（共テ単独）", type:"単独", pct:84},
+  {univ:"上智", faculty:"総合人間科学部", dept:"社会学科", mode:"4教科型（共テ単独）", type:"単独", pct:82},
+  {univ:"上智", faculty:"総合人間科学部", dept:"社会学科", mode:"学科試験・共テ併用", type:"併用", pct:85},
+  {univ:"上智", faculty:"総合人間科学部", dept:"社会福祉学科", mode:"3教科型（共テ単独）", type:"単独", pct:84},
+  {univ:"上智", faculty:"総合人間科学部", dept:"社会福祉学科", mode:"4教科型（共テ単独）", type:"単独", pct:81},
+  {univ:"上智", faculty:"総合人間科学部", dept:"社会福祉学科", mode:"学科試験・共テ併用", type:"併用", pct:81},
+  {univ:"上智", faculty:"総合人間科学部", dept:"看護学科", mode:"3教科型（共テ単独）", type:"単独", pct:77},
+  {univ:"上智", faculty:"総合人間科学部", dept:"看護学科", mode:"4教科型（共テ単独）", type:"単独", pct:71},
+  {univ:"上智", faculty:"総合人間科学部", dept:"看護学科", mode:"学科試験・共テ併用", type:"併用", pct:72},
+  // 法学部
+  {univ:"上智", faculty:"法学部", dept:"法律学科", mode:"3教科型（共テ単独）", type:"単独", pct:88},
+  {univ:"上智", faculty:"法学部", dept:"法律学科", mode:"4教科型（共テ単独）", type:"単独", pct:86},
+  {univ:"上智", faculty:"法学部", dept:"法律学科", mode:"学科試験・共テ併用", type:"併用", pct:85},
+  {univ:"上智", faculty:"法学部", dept:"国際関係法学科", mode:"3教科型（共テ単独）", type:"単独", pct:87},
+  {univ:"上智", faculty:"法学部", dept:"国際関係法学科", mode:"4教科型（共テ単独）", type:"単独", pct:86},
+  {univ:"上智", faculty:"法学部", dept:"国際関係法学科", mode:"学科試験・共テ併用", type:"併用", pct:85},
+  {univ:"上智", faculty:"法学部", dept:"地球環境法学科", mode:"3教科型（共テ単独）", type:"単独", pct:87},
+  {univ:"上智", faculty:"法学部", dept:"地球環境法学科", mode:"4教科型（共テ単独）", type:"単独", pct:85},
+  {univ:"上智", faculty:"法学部", dept:"地球環境法学科", mode:"学科試験・共テ併用", type:"併用", pct:85},
+  // 経済学部
+  {univ:"上智", faculty:"経済学部", dept:"経済学科", mode:"3教科型（共テ単独）", type:"単独", pct:82},
+  {univ:"上智", faculty:"経済学部", dept:"経済学科", mode:"4教科型（共テ単独）", type:"単独", pct:81},
+  {univ:"上智", faculty:"経済学部", dept:"経済学科", mode:"学科試験・共テ併用", type:"併用", pct:80},
+  {univ:"上智", faculty:"経済学部", dept:"経営学科", mode:"3教科型（共テ単独）", type:"単独", pct:87},
+  {univ:"上智", faculty:"経済学部", dept:"経営学科", mode:"4教科型（共テ単独）", type:"単独", pct:83},
+  {univ:"上智", faculty:"経済学部", dept:"経営学科", mode:"学科試験・共テ併用（英）", type:"併用", pct:84},
+  {univ:"上智", faculty:"経済学部", dept:"経営学科", mode:"学科試験・共テ併用（数）", type:"併用", pct:84},
+  // 外国語学部
+  {univ:"上智", faculty:"外国語学部", dept:"英語学科", mode:"3教科型（共テ単独）", type:"単独", pct:88},
+  {univ:"上智", faculty:"外国語学部", dept:"英語学科", mode:"4教科型（共テ単独）", type:"単独", pct:84},
+  {univ:"上智", faculty:"外国語学部", dept:"英語学科", mode:"学科試験・共テ併用", type:"併用", pct:84},
+  {univ:"上智", faculty:"外国語学部", dept:"ドイツ語学科", mode:"3教科型（共テ単独）", type:"単独", pct:87},
+  {univ:"上智", faculty:"外国語学部", dept:"ドイツ語学科", mode:"4教科型（共テ単独）", type:"単独", pct:81},
+  {univ:"上智", faculty:"外国語学部", dept:"ドイツ語学科", mode:"学科試験・共テ併用", type:"併用", pct:84},
+  {univ:"上智", faculty:"外国語学部", dept:"フランス語学科", mode:"3教科型（共テ単独）", type:"単独", pct:87},
+  {univ:"上智", faculty:"外国語学部", dept:"フランス語学科", mode:"4教科型（共テ単独）", type:"単独", pct:81},
+  {univ:"上智", faculty:"外国語学部", dept:"フランス語学科", mode:"学科試験・共テ併用", type:"併用", pct:84},
+  {univ:"上智", faculty:"外国語学部", dept:"イスパニア語学科", mode:"3教科型（共テ単独）", type:"単独", pct:86},
+  {univ:"上智", faculty:"外国語学部", dept:"イスパニア語学科", mode:"4教科型（共テ単独）", type:"単独", pct:83},
+  {univ:"上智", faculty:"外国語学部", dept:"イスパニア語学科", mode:"学科試験・共テ併用", type:"併用", pct:81},
+  {univ:"上智", faculty:"外国語学部", dept:"ロシア語学科", mode:"3教科型（共テ単独）", type:"単独", pct:83},
+  {univ:"上智", faculty:"外国語学部", dept:"ロシア語学科", mode:"4教科型（共テ単独）", type:"単独", pct:76},
+  {univ:"上智", faculty:"外国語学部", dept:"ロシア語学科", mode:"学科試験・共テ併用", type:"併用", pct:77},
+  {univ:"上智", faculty:"外国語学部", dept:"ポルトガル語学科", mode:"3教科型（共テ単独）", type:"単独", pct:84},
+  {univ:"上智", faculty:"外国語学部", dept:"ポルトガル語学科", mode:"4教科型（共テ単独）", type:"単独", pct:77},
+  {univ:"上智", faculty:"外国語学部", dept:"ポルトガル語学科", mode:"学科試験・共テ併用", type:"併用", pct:78},
+  // 総合グローバル学部
+  {univ:"上智", faculty:"総合グローバル学部", dept:"総合グローバル学科", mode:"3教科型（共テ単独）", type:"単独", pct:86},
+  {univ:"上智", faculty:"総合グローバル学部", dept:"総合グローバル学科", mode:"4教科型（共テ単独）", type:"単独", pct:84},
+  {univ:"上智", faculty:"総合グローバル学部", dept:"総合グローバル学科", mode:"学科試験・共テ併用", type:"併用", pct:82},
+  // 理工学部
+  {univ:"上智", faculty:"理工学部", dept:"物質生命理工学科", mode:"3教科型（共テ単独）", type:"単独", pct:82},
+  {univ:"上智", faculty:"理工学部", dept:"機能創造理工学科", mode:"3教科型（共テ単独）", type:"単独", pct:82},
+  {univ:"上智", faculty:"理工学部", dept:"情報理工学科", mode:"3教科型（共テ単独）", type:"単独", pct:82},
+
+  // ── 東京理科大学 ──
+  // A方式（共テ単独型）のみ。各学科に4教科型・3教科型・2教科英型の3パターン
+  // 理学部第一部
+  {univ:"東京理科", faculty:"理学部第一部", dept:"数学科", mode:"A方式4教科型", type:"単独", pct:83},
+  {univ:"東京理科", faculty:"理学部第一部", dept:"数学科", mode:"A方式3教科型", type:"単独", pct:84},
+  {univ:"東京理科", faculty:"理学部第一部", dept:"数学科", mode:"A方式2教科英", type:"単独", pct:85},
+  {univ:"東京理科", faculty:"理学部第一部", dept:"物理学科", mode:"A方式4教科型", type:"単独", pct:85},
+  {univ:"東京理科", faculty:"理学部第一部", dept:"物理学科", mode:"A方式3教科型", type:"単独", pct:86},
+  {univ:"東京理科", faculty:"理学部第一部", dept:"物理学科", mode:"A方式2教科英", type:"単独", pct:87},
+  {univ:"東京理科", faculty:"理学部第一部", dept:"化学科", mode:"A方式4教科型", type:"単独", pct:79},
+  {univ:"東京理科", faculty:"理学部第一部", dept:"化学科", mode:"A方式3教科型", type:"単独", pct:80},
+  {univ:"東京理科", faculty:"理学部第一部", dept:"化学科", mode:"A方式2教科英", type:"単独", pct:80},
+  {univ:"東京理科", faculty:"理学部第一部", dept:"応用数学科", mode:"A方式4教科型", type:"単独", pct:80},
+  {univ:"東京理科", faculty:"理学部第一部", dept:"応用数学科", mode:"A方式3教科型", type:"単独", pct:81},
+  {univ:"東京理科", faculty:"理学部第一部", dept:"応用数学科", mode:"A方式2教科英", type:"単独", pct:82},
+  {univ:"東京理科", faculty:"理学部第一部", dept:"応用化学科", mode:"A方式4教科型", type:"単独", pct:79},
+  {univ:"東京理科", faculty:"理学部第一部", dept:"応用化学科", mode:"A方式3教科型", type:"単独", pct:80},
+  {univ:"東京理科", faculty:"理学部第一部", dept:"応用化学科", mode:"A方式2教科英", type:"単独", pct:81},
+  {univ:"東京理科", faculty:"理学部第一部", dept:"科学コミュニケーション学科", mode:"A方式4教科型", type:"単独", pct:83},
+  {univ:"東京理科", faculty:"理学部第一部", dept:"科学コミュニケーション学科", mode:"A方式3教科型", type:"単独", pct:84},
+  {univ:"東京理科", faculty:"理学部第一部", dept:"科学コミュニケーション学科", mode:"A方式2教科英", type:"単独", pct:85},
+  // 工学部
+  {univ:"東京理科", faculty:"工学部", dept:"建築学科", mode:"A方式4教科型", type:"単独", pct:85},
+  {univ:"東京理科", faculty:"工学部", dept:"建築学科", mode:"A方式3教科型", type:"単独", pct:86},
+  {univ:"東京理科", faculty:"工学部", dept:"建築学科", mode:"A方式2教科英", type:"単独", pct:87},
+  {univ:"東京理科", faculty:"工学部", dept:"工業化学科", mode:"A方式4教科型", type:"単独", pct:77},
+  {univ:"東京理科", faculty:"工学部", dept:"工業化学科", mode:"A方式3教科型", type:"単独", pct:78},
+  {univ:"東京理科", faculty:"工学部", dept:"工業化学科", mode:"A方式2教科英", type:"単独", pct:79},
+  {univ:"東京理科", faculty:"工学部", dept:"電気工学科", mode:"A方式4教科型", type:"単独", pct:83},
+  {univ:"東京理科", faculty:"工学部", dept:"電気工学科", mode:"A方式3教科型", type:"単独", pct:84},
+  {univ:"東京理科", faculty:"工学部", dept:"電気工学科", mode:"A方式2教科英", type:"単独", pct:85},
+  {univ:"東京理科", faculty:"工学部", dept:"情報工学科", mode:"A方式4教科型", type:"単独", pct:85},
+  {univ:"東京理科", faculty:"工学部", dept:"情報工学科", mode:"A方式3教科型", type:"単独", pct:86},
+  {univ:"東京理科", faculty:"工学部", dept:"情報工学科", mode:"A方式2教科英", type:"単独", pct:87},
+  {univ:"東京理科", faculty:"工学部", dept:"機械工学科", mode:"A方式4教科型", type:"単独", pct:84},
+  {univ:"東京理科", faculty:"工学部", dept:"機械工学科", mode:"A方式3教科型", type:"単独", pct:85},
+  {univ:"東京理科", faculty:"工学部", dept:"機械工学科", mode:"A方式2教科英", type:"単独", pct:86},
+  // 薬学部
+  {univ:"東京理科", faculty:"薬学部", dept:"薬学科（6年制）", mode:"A方式4教科型", type:"単独", pct:81},
+  {univ:"東京理科", faculty:"薬学部", dept:"薬学科（6年制）", mode:"A方式3教科型", type:"単独", pct:82},
+  {univ:"東京理科", faculty:"薬学部", dept:"薬学科（6年制）", mode:"A方式2教科英", type:"単独", pct:83},
+  {univ:"東京理科", faculty:"薬学部", dept:"生命創薬科学科（4年制）", mode:"A方式4教科型", type:"単独", pct:81},
+  {univ:"東京理科", faculty:"薬学部", dept:"生命創薬科学科（4年制）", mode:"A方式3教科型", type:"単独", pct:82},
+  {univ:"東京理科", faculty:"薬学部", dept:"生命創薬科学科（4年制）", mode:"A方式2教科英", type:"単独", pct:83},
+  // 創域理工学部
+  {univ:"東京理科", faculty:"創域理工学部", dept:"数理科学科", mode:"A方式4教科型", type:"単独", pct:75},
+  {univ:"東京理科", faculty:"創域理工学部", dept:"数理科学科", mode:"A方式3教科型", type:"単独", pct:76},
+  {univ:"東京理科", faculty:"創域理工学部", dept:"数理科学科", mode:"A方式2教科英", type:"単独", pct:77},
+  {univ:"東京理科", faculty:"創域理工学部", dept:"先端物理学科", mode:"A方式4教科型", type:"単独", pct:81},
+  {univ:"東京理科", faculty:"創域理工学部", dept:"先端物理学科", mode:"A方式3教科型", type:"単独", pct:83},
+  {univ:"東京理科", faculty:"創域理工学部", dept:"先端物理学科", mode:"A方式2教科英", type:"単独", pct:83},
+  {univ:"東京理科", faculty:"創域理工学部", dept:"生命生物科学科", mode:"A方式4教科型", type:"単独", pct:82},
+  {univ:"東京理科", faculty:"創域理工学部", dept:"生命生物科学科", mode:"A方式3教科型", type:"単独", pct:83},
+  {univ:"東京理科", faculty:"創域理工学部", dept:"生命生物科学科", mode:"A方式2教科英", type:"単独", pct:84},
+  {univ:"東京理科", faculty:"創域理工学部", dept:"建築学科", mode:"A方式4教科型", type:"単独", pct:82},
+  {univ:"東京理科", faculty:"創域理工学部", dept:"建築学科", mode:"A方式3教科型", type:"単独", pct:83},
+  {univ:"東京理科", faculty:"創域理工学部", dept:"建築学科", mode:"A方式2教科英", type:"単独", pct:83},
+  {univ:"東京理科", faculty:"創域理工学部", dept:"先端化学科", mode:"A方式4教科型", type:"単独", pct:76},
+  {univ:"東京理科", faculty:"創域理工学部", dept:"先端化学科", mode:"A方式3教科型", type:"単独", pct:77},
+  {univ:"東京理科", faculty:"創域理工学部", dept:"先端化学科", mode:"A方式2教科英", type:"単独", pct:78},
+  {univ:"東京理科", faculty:"創域理工学部", dept:"電気電子情報工学科", mode:"A方式4教科型", type:"単独", pct:80},
+  {univ:"東京理科", faculty:"創域理工学部", dept:"電気電子情報工学科", mode:"A方式3教科型", type:"単独", pct:81},
+  {univ:"東京理科", faculty:"創域理工学部", dept:"電気電子情報工学科", mode:"A方式2教科英", type:"単独", pct:82},
+  {univ:"東京理科", faculty:"創域理工学部", dept:"機械航空宇宙工学科", mode:"A方式4教科型", type:"単独", pct:82},
+  {univ:"東京理科", faculty:"創域理工学部", dept:"機械航空宇宙工学科", mode:"A方式3教科型", type:"単独", pct:83},
+  {univ:"東京理科", faculty:"創域理工学部", dept:"機械航空宇宙工学科", mode:"A方式2教科英", type:"単独", pct:83},
+  {univ:"東京理科", faculty:"創域理工学部", dept:"社会基盤工学科", mode:"A方式4教科型", type:"単独", pct:79},
+  {univ:"東京理科", faculty:"創域理工学部", dept:"社会基盤工学科", mode:"A方式3教科型", type:"単独", pct:80},
+  {univ:"東京理科", faculty:"創域理工学部", dept:"社会基盤工学科", mode:"A方式2教科英", type:"単独", pct:80},
+  // 創域情報学部
+  {univ:"東京理科", faculty:"創域情報学部", dept:"情報理工学科C系", mode:"A方式4教科型", type:"単独", pct:86},
+  {univ:"東京理科", faculty:"創域情報学部", dept:"情報理工学科D系", mode:"A方式4教科型", type:"単独", pct:85},
+  // 先進工学部
+  {univ:"東京理科", faculty:"先進工学部", dept:"電子システム工学科", mode:"A方式4教科型", type:"単独", pct:81},
+  {univ:"東京理科", faculty:"先進工学部", dept:"電子システム工学科", mode:"A方式3教科型", type:"単独", pct:82},
+  {univ:"東京理科", faculty:"先進工学部", dept:"電子システム工学科", mode:"A方式2教科英", type:"単独", pct:83},
+  {univ:"東京理科", faculty:"先進工学部", dept:"マテリアル工学科", mode:"A方式4教科型", type:"単独", pct:80},
+  {univ:"東京理科", faculty:"先進工学部", dept:"マテリアル工学科", mode:"A方式3教科型", type:"単独", pct:81},
+  {univ:"東京理科", faculty:"先進工学部", dept:"マテリアル工学科", mode:"A方式2教科英", type:"単独", pct:82},
+  {univ:"東京理科", faculty:"先進工学部", dept:"生命システム工学科", mode:"A方式4教科型", type:"単独", pct:80},
+  {univ:"東京理科", faculty:"先進工学部", dept:"生命システム工学科", mode:"A方式3教科型", type:"単独", pct:81},
+  {univ:"東京理科", faculty:"先進工学部", dept:"生命システム工学科", mode:"A方式2教科英", type:"単独", pct:82},
+  {univ:"東京理科", faculty:"先進工学部", dept:"物理工学科", mode:"A方式4教科型", type:"単独", pct:81},
+  {univ:"東京理科", faculty:"先進工学部", dept:"物理工学科", mode:"A方式3教科型", type:"単独", pct:82},
+  {univ:"東京理科", faculty:"先進工学部", dept:"物理工学科", mode:"A方式2教科英", type:"単独", pct:83},
+  {univ:"東京理科", faculty:"先進工学部", dept:"機能デザイン工学科", mode:"A方式4教科型", type:"単独", pct:82},
+  {univ:"東京理科", faculty:"先進工学部", dept:"機能デザイン工学科", mode:"A方式3教科型", type:"単独", pct:83},
+  {univ:"東京理科", faculty:"先進工学部", dept:"機能デザイン工学科", mode:"A方式2教科英", type:"単独", pct:85},
+  // 経営学部（800点満点）
+  {univ:"東京理科", faculty:"経営学部", dept:"経営学科", mode:"A方式（共テ単独）", type:"単独", pct:83},
+  {univ:"東京理科", faculty:"経営学部", dept:"ビジネスエコノミクス学科", mode:"A方式（共テ単独）", type:"単独", pct:81},
+  {univ:"東京理科", faculty:"経営学部", dept:"国際デザイン経営学科", mode:"A方式（共テ単独）", type:"単独", pct:80},
+  // 理学部第二部（夜間）
+  {univ:"東京理科", faculty:"理学部第二部", dept:"数学科（夜間）", mode:"A方式（共テ単独）", type:"単独", pct:74},
+  {univ:"東京理科", faculty:"理学部第二部", dept:"物理学科（夜間）", mode:"A方式（共テ単独）", type:"単独", pct:74},
+  {univ:"東京理科", faculty:"理学部第二部", dept:"化学科（夜間）", mode:"A方式（共テ単独）", type:"単独", pct:74},
+];
+
+// ─── RANK CALC ──────────────────────────────────────────────
+function getRank(pct) {
+  if (pct >= 90) return 'A';
+  if (pct >= 85) return 'B';
+  if (pct >= 80) return 'C';
+  if (pct >= 75) return 'D';
+  return 'E';
+}
+
+function getRankColor(r) {
+  return {A:'var(--rank-A)',B:'var(--rank-B)',C:'var(--rank-C)',D:'var(--rank-D)',E:'var(--rank-E)'}[r];
+}
+
+// Enrich data
+DATA.forEach(d => { d.rank = getRank(d.pct); });
+
+// ─── STATE (Sets for multi-select; empty Set = ALL) ──────────
+// Empty Set means "no specific filter" = show all
+let selRanks    = new Set(); // empty = ALL
+let selTypes    = new Set(); // empty = ALL
+let selUnivs    = new Set(); // empty = ALL
+let selFaculties= new Set(); // empty = ALL
+
+function isAll(s) { return s.size === 0; }
+function matches(s, val) { return isAll(s) || s.has(val); }
+
+// ─── MULTI-SELECT TOGGLE HELPER ─────────────────────────────
+// Toggles a value in a Set. If ALL-button was clicked, clears set.
+// If a specific value is clicked while set was empty or has only that value,
+// behaviour: clicking active item deselects it (if others remain selected),
+// or if it's the last one, resets to ALL.
+function toggleSet(set, val) {
+  if (val === 'ALL') {
+    set.clear();
+    return;
+  }
+  if (set.has(val)) {
+    set.delete(val);
+    // if nothing left selected, treat as ALL
+  } else {
+    set.add(val);
+  }
+}
+
+// ─── SYNC BUTTON ACTIVE STATES ──────────────────────────────
+function syncBtns(selector, set, dataAttr) {
+  document.querySelectorAll(selector).forEach(btn => {
+    const val = btn.dataset[dataAttr];
+    if (val === 'ALL') {
+      btn.classList.toggle('active', isAll(set));
+    } else {
+      btn.classList.toggle('active', set.has(val));
+    }
+  });
+}
+
+// ─── RENDER ─────────────────────────────────────────────────
+const UNIVS = ['早稲田','上智','東京理科','学習院','明治','青山学院','立教','中央','法政'];
+
+function render() {
+  const wrap = document.getElementById('table-wrap');
+  wrap.innerHTML = '';
+
+  const filtered = DATA.filter(d =>
+    matches(selRanks,     d.rank) &&
+    matches(selTypes,     d.type) &&
+    matches(selUnivs,     d.univ) &&
+    matches(selFaculties, d.faculty)
+  );
+
+  document.getElementById('visible-count').textContent = filtered.length;
+  document.getElementById('total-count').textContent = DATA.length;
+
+  const empty = document.getElementById('empty-state');
+  if (filtered.length === 0) { empty.classList.add('show'); return; }
+  empty.classList.remove('show');
+
+  const univsToShow = isAll(selUnivs) ? UNIVS : UNIVS.filter(u => selUnivs.has(u));
+
+  univsToShow.forEach(univ => {
+    const rows = filtered.filter(d => d.univ === univ);
+    if (rows.length === 0) return;
+
+    const avg = Math.round(rows.reduce((s,d)=>s+d.pct,0)/rows.length);
+    const section = document.createElement('div');
+    section.className = 'univ-section';
+
+    section.innerHTML = `
+      <div class="univ-header">
+        <div class="univ-name">${univ}大学</div>
+        <div class="univ-avg">平均 ${avg}%</div>
+        <div class="univ-count">${rows.length} 件</div>
+      </div>
+
+      <!-- テーブル（PC） -->
+      <div class="table-list" style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr>
+            <th>ランク</th><th>学部</th><th>学科・専修</th>
+            <th>方式</th><th>利用型</th><th>得点率</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows.sort((a,b)=>b.pct-a.pct).map(d=>{
+            const r = d.rank;
+            const color = getRankColor(r);
+            const barW = Math.max(0, Math.min(100, (d.pct - 50) / 50 * 100));
+            return `<tr>
+              <td><span class="rank-badge rank-${r}">${r}</span></td>
+              <td style="white-space:nowrap">${d.faculty}</td>
+              <td>${d.dept}</td>
+              <td style="white-space:nowrap;font-size:0.76rem;color:var(--text-sub)">${d.mode}</td>
+              <td><span class="type-badge type-${d.type}">${d.type}</span></td>
+              <td>
+                <div class="bar-wrap">
+                  <div class="bar-bg">
+                    <div class="bar-fill" style="width:${barW}%;background:${color}"></div>
+                  </div>
+                  <span class="bar-pct" style="color:${color}">${d.pct}%</span>
+                </div>
+              </td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+      </div>
+
+      <!-- カード（スマホ） -->
+      <div class="card-list">
+        ${rows.sort((a,b)=>b.pct-a.pct).map(d=>{
+          const r = d.rank;
+          const color = getRankColor(r);
+          const barW = Math.max(0, Math.min(100, (d.pct - 50) / 50 * 100));
+          return `<div class="card">
+            <div class="card-header">
+              <span class="rank-badge rank-${r}">${r}</span>
+              <div class="card-title">${d.faculty}　${d.dept}</div>
+              <span class="type-badge type-${d.type}">${d.type}</span>
+            </div>
+            <div class="card-body">
+              <div class="card-row">
+                <span class="card-key">方式</span>
+                <span class="card-val">${d.mode}</span>
+              </div>
+            </div>
+            <div class="card-bar-wrap">
+              <div class="card-bar-bg">
+                <div class="card-bar-fill" style="width:${barW}%;background:${color}"></div>
+              </div>
+              <span class="bar-pct" style="color:${color};min-width:40px;text-align:right">${d.pct}%</span>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>`;
+    wrap.appendChild(section);
+  });
+}
+
+// ─── RANK BUTTONS ────────────────────────────────────────────
+document.querySelectorAll('.rank-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    toggleSet(selRanks, btn.dataset.rank);
+    syncBtns('.rank-btn', selRanks, 'rank');
+    render();
+  });
+});
+
+// ─── TYPE BUTTONS ────────────────────────────────────────────
+document.querySelectorAll('.type-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    toggleSet(selTypes, btn.dataset.type);
+    syncBtns('.type-btn', selTypes, 'type');
+    render();
+  });
+});
+
+// ─── UNIV BUTTONS ────────────────────────────────────────────
+document.querySelectorAll('.univ-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    toggleSet(selUnivs, btn.dataset.univ);
+    syncBtns('.univ-btn', selUnivs, 'univ');
+    // Rebuild faculty buttons to reflect new univ selection
+    selFaculties.clear();
+    updateFacultyButtons();
+    render();
+  });
+});
+
+// ─── FACULTY BUTTONS (dynamic) ───────────────────────────────
+function updateFacultyButtons() {
+  const container = document.getElementById('faculty-btns');
+  const relevantData = isAll(selUnivs) ? DATA : DATA.filter(d => selUnivs.has(d.univ));
+  const faculties = Array.from(new Set(relevantData.map(d => d.faculty)));
+
+  container.innerHTML = [
+    `<button class="filter-btn faculty-btn${isAll(selFaculties) ? ' active' : ''}" data-faculty="ALL">すべて</button>`,
+    ...faculties.map(f => {
+      const active = selFaculties.has(f) ? ' active' : '';
+      return `<button class="filter-btn faculty-btn${active}" data-faculty="${f}">${f}</button>`;
+    })
+  ].join('');
+
+  container.querySelectorAll('.faculty-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      toggleSet(selFaculties, btn.dataset.faculty);
+      // sync active states inside this dynamic container
+      container.querySelectorAll('.faculty-btn').forEach(b => {
+        const v = b.dataset.faculty;
+        b.classList.toggle('active', v === 'ALL' ? isAll(selFaculties) : selFaculties.has(v));
+      });
+      render();
+    });
+  });
+}
+
+updateFacultyButtons();
+render();
+</script>
+</div><!-- #app -->
+</body>
+</html>
